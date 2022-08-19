@@ -1,0 +1,41 @@
+{
+  "name": "js13k-2022",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "http-server -s",
+    "build": "node ./build.js",
+    "pack": "js13k-packer src/index.html dist --bundle=false -o js13k-2022.zip",
+    "prepare": "husky install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/straker/js13k-2022.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/straker/js13k-2022/issues"
+  },
+  "homepage": "https://github.com/straker/js13k-2022#readme",
+  "dependencies": {
+    "esbuild": "^0.15.5",
+    "esbuild-plugin-kontra": "^1.0.0",
+    "eslint": "^8.22.0",
+    "http-server": "^14.1.1",
+    "husky": "^8.0.1",
+    "js13k-packer": "^1.0.2",
+    "kontra": "^8.0.0",
+    "prettier": "^2.7.1"
+  },
+  "lint-staged": {
+    "*.{md,json,js,ts,html}": [
+      "prettier --write"
+    ],
+    "*.{js,ts}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  }
+}
