@@ -9,7 +9,10 @@ module.exports = {
   },
   extends: 'eslint:recommended',
   globals: {
-    game: 'readonly'
+    PI: 'readonly',
+    sin: 'readonly',
+    cos: 'readonly',
+    atan2: 'readonly'
   },
   rules: {
     'no-debugger': 0,
