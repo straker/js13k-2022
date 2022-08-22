@@ -31,7 +31,7 @@ const projectiles = [
     0,
     15,
     15,
-    5,
+    4,
     function () {
       this.opacity -= 1 / this.ttl / 2
       this.advance()

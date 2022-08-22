@@ -28,7 +28,7 @@ const weapons = [
     [
       // dash player forward
       player => {
-        let { x, y } = movePoint(player, player.facingRot, 10)
+        let { x, y } = movePoint(player, player.facingRot, 20)
         player.x = x
         player.y = y
       }

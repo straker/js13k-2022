@@ -12,7 +12,9 @@ module.exports = {
     PI: 'readonly',
     sin: 'readonly',
     cos: 'readonly',
-    atan2: 'readonly'
+    atan2: 'readonly',
+    max: 'readonly',
+    min: 'readonly'
   },
   rules: {
     'no-debugger': 0,
