@@ -69,14 +69,63 @@ let player = Sprite({
   }
 })
 
+/* read this for enemy movement logic: https://js13kgames.com/entries/back-to-life  for enemy */
+let wraith = Sprite({
+  speed: 3, //this is quite fast lol,
+  x: canvas.width / 2, // spawn enemy outside of canvas,
+  y: canvas.height, // spawn enemy outside of canvas,
+  width: 20,
+  height: 20,
+  color: 'white',
+  update: function (dt) {
+    let dx = player.x - this.x // once this reaches 0 on the x axis == on the player
+    let dy = player.y - this.y // once this reaches 0 on the y axis == on the player
+    // let hitPlayer = 0 // should increment by one on each hit
+
+    if (Math.abs(dx) > Math.abs(dy)) {
+      this.dx = (dx / Math.abs(dx)) * this.speed
+      // this.dy = 0
+    } else {
+      this.dy = (dy / Math.abs(dy)) * this.speed
+      // this.dx = 0
+    }
+
+    this.advance(dt)
+
+    if (this.isMeleeRange(player)) {
+      console.log('IS IN MELEE RANGE')
+      //TODO: somehow access players dx and dy and decrease by 0.2
+      // player.dx -= 0.2
+      // player.dy -= 0.2
+      // hitPlayer++
+      // if (hitPlayer == 5) {
+      // player.dx = 0
+      // player.dy = 0
+      // setTimeout(() => { // not sure if this is the right approach
+      // player.dx = some default value
+      // player.dy = some default value
+      // hitPlayer = 0 // reset player hit
+      // }, 3000)
+      // }
+    }
+  },
+  isMeleeRange: function (player) {
+    let dx = Math.abs(player.x - this.x)
+    let dy = Math.abs(player.y - this.y)
+    return Math.max(dx, dy) < 1 // is in melee range
+  }
+})
+
 let loop = GameLoop({
   update() {
     player.update()
+    wraith.update()
     sprites.map(sprite => sprite.update())
     sprites = sprites.filter(sprite => sprite.isAlive())
   },
   render() {
     player.render()
+    wraith.render()
     sprites.map(sprite => sprite.render())
   }
 })
