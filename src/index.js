@@ -118,7 +118,7 @@ let loop = GameLoop({
       })
 
       // smoothly transition baddy from current velocity to new
-      // velocity by capping rotation to a max vale
+      // velocity by capping rotation to a max value
       let angle = degToRad(5)
       if (baddy.velocity.angle(velocityVector) > angle) {
         // determine if the velocityVector is clockwise or
