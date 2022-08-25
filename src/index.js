@@ -1,7 +1,8 @@
 import {
   Sprite,
   keyPressed,
-  angleToTarget,
+  degToRad,
+  rotatePoint,
   Vector,
   GameLoop
 } from './libs/kontra.mjs'
@@ -78,7 +79,7 @@ let player = Sprite({
 })
 
 function spawnBaddy(x, y, id) {
-  let [, speed, size, color, hp] = enemies[id]
+  let [, speed, size, color, hp, behaviors] = enemies[id]
   baddies.push(
     Sprite({
       x,
@@ -87,6 +88,7 @@ function spawnBaddy(x, y, id) {
       size,
       speed,
       hp,
+      behaviors,
       render() {
         let { size, context, color } = this
         context.beginPath()
@@ -101,6 +103,7 @@ function spawnBaddy(x, y, id) {
 for (let i = 0; i < 10; i++) {
   spawnBaddy(50 + i * 30, 50, 0)
 }
+spawnBaddy(50, 20, 1)
 
 let loop = GameLoop({
   update() {
@@ -108,38 +111,28 @@ let loop = GameLoop({
     projectiles.map(projectile => projectile.update())
 
     baddies.map(baddy => {
-      let numNeighbors = 0,
-        angle = angleToTarget(baddy, player),
-        separationVector = Vector()
+      let velocityVector = baddy.velocity
 
-      // seek steering behavior
-      // @see https://gamedevelopment.tutsplus.com/tutorials/understanding-steering-behaviors-seek--gamedev-849
-      let seekVector = Vector(sin(angle), -cos(angle)).subtract(baddy.velocity)
-
-      // avoidance steering behavior (based on separation
-      // flocking behavior)
-      // @see https://gamedevelopment.tutsplus.com/tutorials/3-simple-rules-of-flocking-behaviors-alignment-cohesion-and-separation--gamedev-3444
-      baddies.map(baddy2 => {
-        if (baddy != baddy2 && circleCircleCollision(baddy, baddy2)) {
-          numNeighbors++
-          separationVector = separationVector.add(
-            baddy2.position.subtract(baddy.position)
-          )
-        }
+      baddy.behaviors.map(behavior => {
+        velocityVector = velocityVector.add(behavior(baddy, player, baddies))
       })
 
-      if (numNeighbors) {
-        separationVector = separationVector
-          .normalize(numNeighbors)
-          .scale(-1)
-          .normalize()
+      // smoothly transition baddy from current velocity to new
+      // velocity by capping rotation to a max vale
+      let angle = degToRad(5)
+      if (baddy.velocity.angle(velocityVector) > angle) {
+        // determine if the velocityVector is clockwise or
+        // counter-clockwise from the current vector
+        // @see https://stackoverflow.com/a/13221874/2124254
+        let dot =
+          baddy.velocity.x * -velocityVector.y +
+          baddy.velocity.y * velocityVector.x
+        let sign = dot > 0 ? -1 : 1
+        let { x, y } = rotatePoint(baddy.velocity, angle * sign)
+        velocityVector = Vector(x, y)
       }
 
-      baddy.velocity = baddy.velocity
-        .add(seekVector)
-        .add(separationVector)
-        .normalize()
-        .scale(baddy.speed)
+      baddy.velocity = velocityVector.normalize().scale(baddy.speed)
 
       baddy.advance()
 

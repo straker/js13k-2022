@@ -15,8 +15,9 @@ esbuild.build({
         anchor: true
       },
       vector: {
-        distance: true,
+        angle: true,
         normalize: true,
+        distance: true,
         length: true,
         scale: true,
         subtract: true
