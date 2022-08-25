@@ -23,6 +23,14 @@
   }
 */
 
-const enemies = [[0, 1.5, 10, 'red']]
+const enemies = [
+  [0, 1.5, 10, 'red', 50],
+
+  /**
+   * enemy: wraith
+   * @see https://github.com/straker/js13k-2022/issues/3#issuecomment-1223405705
+   */
+  [1, 1, 10, 'white', 150]
+]
 
 export default enemies

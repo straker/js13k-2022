@@ -57,6 +57,7 @@ let player = Sprite({
       let [, speed, size, ttl, update, render] = weapon[3]
       projectiles.push(
         Sprite({
+          damage: weapon[1], //weapon damage
           speed,
           size,
           ttl,
@@ -79,6 +80,8 @@ let player = Sprite({
 
 function spawnBaddy(x, y, id) {
   let [, speed, size, color, hp] = enemies[id]
+  /* used to track total amount of times player has been hit */
+  let hitPlayer = 0
   baddies.push(
     Sprite({
       x,
@@ -87,6 +90,7 @@ function spawnBaddy(x, y, id) {
       size,
       speed,
       hp,
+      hitPlayer,
       render() {
         let { size, context, color } = this
         context.beginPath()
@@ -100,6 +104,12 @@ function spawnBaddy(x, y, id) {
 
 for (let i = 0; i < 10; i++) {
   spawnBaddy(50 + i * 30, 50, 0)
+}
+
+/* spawn wraith */
+for (let i = 0; i < 5; i++) {
+  /* spawn wraith just outside the canvas and spanned out */
+  spawnBaddy(50 + i * 200, -50, 1)
 }
 
 let loop = GameLoop({
@@ -146,7 +156,17 @@ let loop = GameLoop({
       // collision detection
       projectiles.map(projectile => {
         if (circleCircleCollision(projectile, baddy)) {
-          baddy.ttl = 0
+          console.log({
+            bhp: baddy.hp,
+            pd: projectile.damage
+          })
+          // damaged enemy, remove from current HP
+          baddy.hp -= projectile.damage
+
+          if (baddy.hp <= 0) {
+            // baddy DEAD!
+            baddy.ttl = 0
+          }
         }
       })
     })
