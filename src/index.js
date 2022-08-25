@@ -122,7 +122,7 @@ let loop = GameLoop({
       let angle = degToRad(5)
       if (baddy.velocity.angle(velocityVector) > angle) {
         // determine if the velocityVector is clockwise or
-        // counter-clockwise from the current vector
+        // counter-clockwise from the current velocity
         // @see https://stackoverflow.com/a/13221874/2124254
         let dot =
           baddy.velocity.x * -velocityVector.y +
