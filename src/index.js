@@ -10,7 +10,11 @@ import globals from './globals.js'
 import init from './init.js'
 import weapons from './tables/weapons.js'
 import enemies from './tables/enemies.js'
-import { getAngle, circleCircleCollision } from './utils.js'
+import {
+  getAngle,
+  circleCircleCollision,
+  baddyPlayerCollision
+} from './utils.js'
 
 let { canvas } = init()
 let projectiles = []
@@ -151,7 +155,25 @@ let loop = GameLoop({
         .normalize()
         .scale(baddy.speed)
 
+      if (baddyPlayerCollision(baddy, player)) {
+        // TODO: we need a way to differentiate player was hit with X baddy effect somehow and attack rate
+        // I am getting INSTA rooted :(
+        baddy.hitPlayer++
+      }
+
       baddy.advance()
+
+      /* wraith: roots player for 3 seconds*/
+      if (baddy.hitPlayer >= 5) {
+        console.log('ROOTED!')
+        player.speed = 0
+        // not sure if this is the right approach
+        setTimeout(() => {
+          player.speed = 2
+          this.hitPlayer = 0 // reset player hit
+          console.log('Reset root')
+        }, 3000)
+      }
 
       // collision detection
       projectiles.map(projectile => {
