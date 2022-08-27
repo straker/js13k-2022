@@ -7,6 +7,7 @@ import { angleToTarget, Vector } from '../libs/kontra.mjs'
 
 // avoidance (based on separation flocking behavior)
 // @see https://gamedevelopment.tutsplus.com/tutorials/3-simple-rules-of-flocking-behaviors-alignment-cohesion-and-separation--gamedev-3444
+// Note: slow for large groups of enemies (~350)
 function avoidance(source, targets, distance) {
   let numNeighbors = 0,
     avoidanceVector = Vector()

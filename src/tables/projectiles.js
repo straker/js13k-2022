@@ -3,10 +3,12 @@
   0 - id
   1 - speed
   2 - size
-  3 - ttl
-  4 - update function
-  5 - render function
-  6 - effects
+  3 - damage
+  4 - ttl
+  5 - pierce
+  6 - update function
+  7 - render function
+  8 - effects
 
 
 
@@ -31,7 +33,9 @@ const projectiles = [
     0,
     15,
     15,
+    40,
     4,
+    5,
     function () {
       this.opacity -= 1 / this.ttl / 2
       this.advance()

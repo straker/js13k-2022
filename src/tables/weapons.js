@@ -4,10 +4,9 @@ import projectiles from './projectiles.js'
 /*
   index stat properties:
   0 - id
-  1 - damage
-  2 - rate of fire (seconds per attack)
-  3 - projectile
-  4 - effects
+  1 - rate of fire (seconds per attack)
+  2 - projectile
+  3 - effects
 
 
   possible stats
@@ -22,7 +21,6 @@ const weapons = [
   // gauntlets
   [
     0,
-    30,
     45,
     projectiles[0],
     [

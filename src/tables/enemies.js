@@ -13,6 +13,7 @@ import behaviors from './behaviors.js'
   possible stats
   id
   draw
+  xp
   projectile_speed
   projectile_size
   projectile_spread
@@ -27,7 +28,7 @@ import behaviors from './behaviors.js'
 
 const enemies = [
   [0, 1, 10, 'red', 10, [behaviors[0], behaviors[1](22)]],
-  [0, 1, 10, 'yellow', 10, [behaviors[0], behaviors[1](22), behaviors[2](150)]]
+  [1, 1, 10, 'yellow', 10, [behaviors[0], behaviors[1](22), behaviors[2](150)]]
 ]
 
 export default enemies

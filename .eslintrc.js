@@ -14,7 +14,8 @@ module.exports = {
     cos: 'readonly',
     atan2: 'readonly',
     max: 'readonly',
-    min: 'readonly'
+    min: 'readonly',
+    random: 'readonly'
   },
   rules: {
     'no-debugger': 0,
