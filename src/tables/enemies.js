@@ -3,7 +3,7 @@ import behaviors from './behaviors.js'
   index stat properties:
   0 - id
   1 - speed
-  2 - size
+  2 - size (radius)
   3 - color
   4 - hp
   5 - behaviors

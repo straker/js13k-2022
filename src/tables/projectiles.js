@@ -8,7 +8,7 @@
   5 - pierce
   6 - update function
   7 - render function
-  8 - effects
+  8 - on attack effects (added dynamically as projectile has no inherit effects)
 
 
 
@@ -38,7 +38,6 @@ const projectiles = [
     5,
     function () {
       this.opacity -= 1 / this.ttl / 2
-      this.advance()
     },
     function () {
       let { size, context } = this
