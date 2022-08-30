@@ -7,8 +7,6 @@ let grid = [],
   maxRow = (canvas.height / gridSize) | 0,
   maxCol = (canvas.width / gridSize) | 0
 clearGrid()
-window.grid = grid
-window.getPos = getPos
 
 function getPos(obj) {
   let { x, y, size } = obj
@@ -25,6 +23,7 @@ function getPos(obj) {
 export function addToGrid(obj) {
   let [row, endRow, col, endCol] = getPos(obj)
 
+  // only add objects that are on screen
   for (let r = row; r >= 0 && r <= endRow && r <= maxRow; r++) {
     for (let c = col; c >= 0 && c <= endCol && c <= maxCol; c++) {
       grid[r][c].push(obj)

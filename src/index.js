@@ -100,6 +100,7 @@ let timeText = Text({
       let weapon = deepCopyArray(player.weapon),
         projectile = deepCopyArray(weapon[2])
       weapon[3] = []
+      projectile[8] = []
       player.abilities.map(ability => {
         ability[1](weapon, projectile)
       })
@@ -123,6 +124,7 @@ let timeText = Text({
         ) {
           hit.push(collisions[i])
           collisions[i].hp -= projectile.damage
+          projectile.effects.map(effect => effect(collisions[i]))
 
           if (collisions[i].hp <= 0) {
             collisions[i].ttl = 0
