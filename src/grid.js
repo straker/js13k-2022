@@ -7,6 +7,8 @@ let grid = [],
   maxRow = (canvas.height / gridSize) | 0,
   maxCol = (canvas.width / gridSize) | 0
 clearGrid()
+window.grid = grid
+window.getPos = getPos
 
 function getPos(obj) {
   let { x, y, size } = obj
@@ -23,9 +25,9 @@ function getPos(obj) {
 export function addToGrid(obj) {
   let [row, endRow, col, endCol] = getPos(obj)
 
-  for (; row >= 0 && row <= endRow && row <= maxRow; row++) {
-    for (; col >= 0 && col <= endCol && col <= maxCol; col++) {
-      grid[row][col].push(obj)
+  for (let r = row; r >= 0 && r <= endRow && r <= maxRow; r++) {
+    for (let c = col; c >= 0 && c <= endCol && c <= maxCol; c++) {
+      grid[r][c].push(obj)
     }
   }
 }
@@ -33,9 +35,13 @@ export function addToGrid(obj) {
 export function getFromGrid(obj) {
   let [row, endRow, col, endCol] = getPos(obj),
     objects = []
-  for (; row >= 0 && row <= endRow && row <= maxRow; row++) {
-    for (; col >= 0 && col <= endCol && col <= maxCol; col++) {
-      objects.push(...grid[row][col])
+  for (let r = row; r >= 0 && r <= endRow && r <= maxRow; r++) {
+    for (let c = col; c >= 0 && c <= endCol && c <= maxCol; c++) {
+      grid[r][c].map(item => {
+        if (!objects.includes(item)) {
+          objects.push(item)
+        }
+      })
     }
   }
 
@@ -50,3 +56,22 @@ export function clearGrid() {
     }
   }
 }
+
+// TODO: delete before submit
+// export function renderGrid() {
+//   let context = canvas.getContext('2d')
+//   context.strokeStyle = 'yellow'
+//   context.lineWidth = 3
+//   for (let r = 0; r < canvas.height; r+= gridSize) {
+//     context.beginPath()
+//     context.moveTo(0, r)
+//     context.lineTo(canvas.width, r)
+//     context.stroke()
+//   }
+//   for (let c = 0; c < canvas.width; c+= gridSize) {
+//     context.beginPath()
+//     context.moveTo(c, 0)
+//     context.lineTo(c, canvas.height)
+//     context.stroke()
+//   }
+// }

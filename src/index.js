@@ -1,6 +1,7 @@
 import {
   degToRad,
   rotatePoint,
+  keyPressed,
   Vector,
   GameLoop,
   Text
@@ -11,10 +12,14 @@ import './init.js'
 import './globals.js'
 
 import player from './entities/player.js'
-import { projectiles, removeDeadProjectiles } from './entities/projectiles.js'
+import {
+  projectiles,
+  spawnProjectile,
+  removeDeadProjectiles
+} from './entities/projectiles.js'
 import { enemies, spawnEnemies, removeDeadEnemies } from './entities/enemies.js'
 import { addToGrid, clearGrid } from './grid.js'
-import { easeInSine, moveAndGetCollisions } from './utils.js'
+import { easeInSine, deepCopyArray, updateAndGetCollisions } from './utils.js'
 
 let timeText = Text({
     text: '00:00',
@@ -85,14 +90,46 @@ let timeText = Text({
       /////////////////////////////////////////////
       // update projectiles
       /////////////////////////////////////////////
+      // fire projectiles before updating them so their
+      // first position is checked for collision (otherwise
+      // they move first and and no collision happens where
+      // they first spawn)
+
+      // apply abilities (deep copy objects so we don't
+      // cause any unforseen problems due to mutation)
+      let weapon = deepCopyArray(player.weapon),
+        projectile = deepCopyArray(weapon[2])
+      weapon[3] = []
+      player.abilities.map(ability => {
+        ability[1](weapon, projectile)
+      })
+      let [, attackSpeed, , effects] = weapon
+
+      // attack
+      if (++player.dt > attackSpeed && keyPressed('space')) {
+        player.dt = 0
+        spawnProjectile(projectile, player)
+        effects.map(effect => effect(player))
+      }
+
       projectiles.map(projectile => {
-        let collisions = moveAndGetCollisions(projectile),
+        let collisions = updateAndGetCollisions(projectile),
+          { hit, pierce } = projectile,
           i = 0
-        for (; i < collisions.length - 1 && projectile.pierce--; i++) {
-          collisions[i].ttl = 0
+        for (
+          ;
+          collisions[i] && hit.length < pierce && !hit.includes(collisions[i]);
+          i++
+        ) {
+          hit.push(collisions[i])
+          collisions[i].hp -= projectile.damage
+
+          if (collisions[i].hp <= 0) {
+            collisions[i].ttl = 0
+          }
         }
 
-        if (projectile.pierce <= 0) {
+        if (hit.length >= pierce) {
           projectile.ttl = 0
         }
       })
@@ -100,7 +137,7 @@ let timeText = Text({
       /////////////////////////////////////////////
       // update player
       /////////////////////////////////////////////
-      moveAndGetCollisions(player)
+      updateAndGetCollisions(player)
 
       removeDeadProjectiles()
       removeDeadEnemies()

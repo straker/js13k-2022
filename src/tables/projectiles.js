@@ -32,7 +32,7 @@ const projectiles = [
   [
     0,
     15,
-    15,
+    19,
     40,
     4,
     5,
@@ -44,7 +44,10 @@ const projectiles = [
       context.beginPath()
       context.strokeStyle = 'skyblue'
       context.lineWidth = 5
-      context.arc(0, 0, size, PI, 0)
+      // pixel perfect collision doesn't look visually
+      // satisfying so we'll add a small padding around the
+      // projectile by drawing it smaller than its size
+      context.arc(0, 0, size - 4, PI, 0)
       context.stroke()
     }
   ]

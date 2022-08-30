@@ -14,9 +14,9 @@ export function spawnProjectile(projectile, player) {
       pierce,
       update,
       render,
-      // TODO: since the projectile spawns a little in front
-      // of the player, enemies behind the first movement
-      // of the projectile are not hit
+      // a projectile can only hit each enemy once during
+      // its lifetime
+      hit: [],
       x: x + width * sin(facingRot),
       y: y + height * -cos(facingRot),
       rotation: facingRot,

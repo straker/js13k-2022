@@ -10,10 +10,7 @@ export function getAngle(x, y) {
 }
 
 export function circleCircleCollision(circle1, circle2) {
-  return (
-    (circle2.x - circle1.x) ** 2 + (circle2.y - circle1.y) ** 2 <=
-    (circle1.size + circle2.size) ** 2
-  )
+  return circle1.position.distance(circle2) <= circle1.size + circle2.size
 }
 
 // @see https://github.com/chenglou/tween-functions
@@ -35,9 +32,9 @@ export function deepCopyArray(array) {
 // in order to calculate collision for a fast moving object
 // we need to move the object by a fixed speed and check for
 // collision at every interval
-export function moveAndGetCollisions(obj) {
+export function updateAndGetCollisions(obj) {
   // the fixed step size should not be larger than the smallest
-  // enemy diameter
+  // enemy or enemy projectile diameter
   let fixedStep = 15,
     length = obj.velocity.length(),
     moveDistance = length,
@@ -56,7 +53,10 @@ export function moveAndGetCollisions(obj) {
       i = colliders.length
     while (i--) {
       let collider = colliders[i]
-      if (circleCircleCollision(obj, collider)) {
+      if (
+        circleCircleCollision(obj, collider) &&
+        !collisions.includes(collider)
+      ) {
         collisions.push(collider)
       }
     }

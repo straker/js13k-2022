@@ -1,8 +1,7 @@
 import { getCanvas, keyPressed, Sprite } from '../libs/kontra.mjs'
-import { spawnProjectile } from './projectiles.js'
 import weaponsTable from '../tables/weapons.js'
 import abilityTable from '../tables/abilities.js'
-import { getAngle, deepCopyArray } from '../utils.js'
+import { getAngle } from '../utils.js'
 
 let canvas = getCanvas(),
   player = Sprite({
@@ -20,7 +19,7 @@ let canvas = getCanvas(),
     update() {
       let dx = 0,
         dy = 0,
-        { weapon, speed, abilities } = this
+        { speed } = this
       this.dx = this.dy = 0
 
       // support arrow keys, WASD, and ZQSD
@@ -39,23 +38,6 @@ let canvas = getCanvas(),
         this.facingRot = getAngle(dx, dy)
         this.dx = dx ? speed * sin(this.facingRot) : 0
         this.dy = dy ? speed * -cos(this.facingRot) : 0
-      }
-
-      // apply abilities (deep copy objects so we don't
-      // cause any unforseen problems due to mutation)
-      weapon = deepCopyArray(weapon)
-      weapon[3] = []
-      let projectile = deepCopyArray(weapon[2])
-      abilities.map(ability => {
-        ability[1](weapon, projectile)
-      })
-      let [, attackSpeed, , effects] = weapon
-
-      // attack
-      if (++this.dt > attackSpeed && keyPressed('space')) {
-        this.dt = 0
-        spawnProjectile(projectile, this)
-        effects.map(effect => effect(this))
       }
     }
   })
