@@ -1,8 +1,8 @@
 import { getCanvas, degToRad, rotatePoint, Sprite } from '../libs/kontra.mjs'
 import enemyTable from '../tables/enemies.js'
 
-export let enemies = []
-let canvas = getCanvas()
+export let enemies = [],
+  canvas = getCanvas()
 
 function spawnEnemy(x, y, id) {
   let [, speed, size, color, hp, behaviors] = enemyTable[id]

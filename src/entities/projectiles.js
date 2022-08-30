@@ -3,8 +3,8 @@ import { Sprite } from '../libs/kontra.mjs'
 export let projectiles = []
 
 export function spawnProjectile(projectile, player) {
-  let [, speed, size, damage, ttl, pierce, update, render] = projectile
-  let { x, y, width, height, facingRot } = player
+  let [, speed, size, damage, ttl, pierce, update, render] = projectile,
+    { x, y, width, height, facingRot } = player
   projectiles.push(
     Sprite({
       speed,
