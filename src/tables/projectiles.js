@@ -8,7 +8,7 @@
   5 - pierce
   6 - update function
   7 - render function
-  8 - effects
+  8 - on attack effects (added dynamically as projectile has no inherit effects)
 
 
 
@@ -32,20 +32,22 @@ const projectiles = [
   [
     0,
     15,
-    15,
+    19,
     40,
     4,
     5,
     function () {
       this.opacity -= 1 / this.ttl / 2
-      this.advance()
     },
     function () {
       let { size, context } = this
       context.beginPath()
       context.strokeStyle = 'skyblue'
       context.lineWidth = 5
-      context.arc(0, 0, size, PI, 0)
+      // pixel perfect collision doesn't look visually
+      // satisfying so we'll add a small padding around the
+      // projectile by drawing it smaller than its size
+      context.arc(0, 0, size - 4, PI, 0)
       context.stroke()
     }
   ]
