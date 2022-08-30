@@ -63,7 +63,7 @@ let timeText = Text({
         let velocityVector = enemy.velocity
 
         enemy.behaviors.map(behavior => {
-          velocityVector = velocityVector.add(behavior(enemy, player, enemies))
+          velocityVector = velocityVector.add(behavior(enemy, player))
         })
 
         // smoothly transition enemy from current velocity to

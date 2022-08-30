@@ -1,8 +1,9 @@
 import { angleToTarget, Vector } from '../libs/kontra.mjs'
+import { getFromGrid } from '../grid.js'
 
 /*
   steering behaviors that allow enemies to move in various ways.
-  all behaviors take same parameters: current enemy, player, and all enemies array.
+  all behaviors take same parameters: current enemy and player
 */
 
 // avoidance (based on separation flocking behavior)
@@ -41,7 +42,7 @@ const behaviors = [
   },
 
   // avoid other enemies
-  distance => (enemy, player, enemies) => avoidance(enemy, enemies, distance),
+  distance => enemy => avoidance(enemy, getFromGrid(enemy), distance),
 
   // avoid player
   distance => (enemy, player) => avoidance(enemy, player, distance)
