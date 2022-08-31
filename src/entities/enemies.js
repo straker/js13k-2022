@@ -1,6 +1,7 @@
 import { getCanvas, degToRad, rotatePoint, Sprite } from '../libs/kontra.mjs'
 import enemyTable from '../tables/enemies.js'
 
+export let enemiesDead = 0
 export let enemies = [],
   canvas = getCanvas()
 
@@ -38,5 +39,10 @@ export function spawnEnemies(num, id) {
 }
 
 export function removeDeadEnemies() {
-  enemies = enemies.filter(enemy => enemy.isAlive())
+  enemies = enemies.filter(enemy => {
+    if (!enemy.isAlive()) {
+      enemiesDead++
+    }
+    return enemy.isAlive()
+  })
 }

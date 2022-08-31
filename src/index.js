@@ -17,10 +17,22 @@ import {
   spawnProjectile,
   removeDeadProjectiles
 } from './entities/projectiles.js'
-import { enemies, spawnEnemies, removeDeadEnemies } from './entities/enemies.js'
+import {
+  enemies,
+  enemiesDead,
+  spawnEnemies,
+  removeDeadEnemies
+} from './entities/enemies.js'
 import { addToGrid, clearGrid } from './grid.js'
 import { easeInSine, deepCopyArray, updateAndGetCollisions } from './utils.js'
 
+let killCount = Text({
+  text: 'Kills: 0',
+  x: 850,
+  y: 25,
+  font: '26px Arial',
+  color: 'white'
+})
 let timeText = Text({
     text: '00:00',
     x: 25,
@@ -140,6 +152,7 @@ let timeText = Text({
       // update player
       /////////////////////////////////////////////
       updateAndGetCollisions(player)
+      killCount.text = `Kills: ${enemiesDead}`
 
       removeDeadProjectiles()
       removeDeadEnemies()
@@ -149,6 +162,7 @@ let timeText = Text({
       projectiles.map(projectile => projectile.render())
       enemies.map(enemy => enemy.render())
       timeText.render()
+      killCount.render()
     }
   })
 loop.start()
