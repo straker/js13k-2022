@@ -3,22 +3,23 @@ import projectiles from './projectiles.js'
 /*
   index stat properties:
   0 - id
-  1 - attack speed (seconds per attack)
+  1 - attack speed (frames per attack)
   2 - projectile
-  3 - on attack effects (added dynamically as weapon has no inherit effects)
+  3 - spread (in degrees)
+  4 - number of projectiles
+  5 - on attack effects (added dynamically as weapon has no inherit effects)
 
+  ===== everything beyond this point is for ability modifications
 
-  possible stats
-  id
-  damage
-  fire_rate
-  ammo
-  num_projectiles
+  6 - num projectiles every n time
+  7 - total num projectiles every n time
 */
 
 const weapons = [
   // gauntlets
-  [0, 45, projectiles[0]]
+  [0, 45, projectiles[0], 15, 1],
+  // pistol
+  [0, 30, projectiles[1], 9, 1]
 ]
 
 export default weapons

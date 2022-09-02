@@ -2,6 +2,7 @@ import { getCanvas, keyPressed, Sprite } from '../libs/kontra.mjs'
 import weaponsTable from '../tables/weapons.js'
 import abilityTable from '../tables/abilities.js'
 import { getAngle } from '../utils.js'
+import { spawnWeaponProjectiles } from './projectiles.js'
 
 let canvas = getCanvas(),
   player = Sprite({
@@ -11,11 +12,11 @@ let canvas = getCanvas(),
     height: 35,
     color: 'orange',
     anchor: { x: 0.5, y: 0.5 },
-    weapon: weaponsTable[0],
+    weapon: weaponsTable[1],
     speed: 2,
     dt: 99, // high so first attack happens right away
     facingRot: 0,
-    abilities: [abilityTable[0]],
+    abilities: [abilityTable[8], abilityTable[8], abilityTable[8]],
     update() {
       let dx = 0,
         dy = 0,
@@ -39,6 +40,11 @@ let canvas = getCanvas(),
         this.dx = dx ? speed * sin(this.facingRot) : 0
         this.dy = dy ? speed * -cos(this.facingRot) : 0
       }
+    },
+    fire(weapon, projectile) {
+      this.dt = 0
+      spawnWeaponProjectiles(projectile, this, weapon)
+      weapon[5].map(effect => effect(this))
     }
   })
 

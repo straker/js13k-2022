@@ -12,11 +12,7 @@ import './init.js'
 import './globals.js'
 
 import player from './entities/player.js'
-import {
-  projectiles,
-  spawnProjectile,
-  removeDeadProjectiles
-} from './entities/projectiles.js'
+import { projectiles, removeDeadProjectiles } from './entities/projectiles.js'
 import {
   enemies,
   enemiesDead,
@@ -25,21 +21,26 @@ import {
 } from './entities/enemies.js'
 import { addToGrid, clearGrid } from './grid.js'
 import { easeInSine, deepCopyArray, updateAndGetCollisions } from './utils.js'
+import { updateTimers } from './timer.js'
 
-let killCount = Text({
-  text: 'Kills: 0',
-  x: 850,
-  y: 25,
-  font: '26px Arial',
-  color: 'white'
-})
-let timeText = Text({
-    text: '00:00',
-    x: 25,
-    y: 25,
-    font: '26px Arial',
-    color: 'white'
-  }),
+let texts = [
+    // timer
+    Text({
+      text: '00:00',
+      x: 25,
+      y: 25,
+      font: '26px Arial',
+      color: 'white'
+    }),
+    // kill count
+    Text({
+      text: 'Kills: 0',
+      x: 850,
+      y: 25,
+      font: '26px Arial',
+      color: 'white'
+    })
+  ],
   totalGameTime = 60 * 10, // 10 minutes (600 seconds)
   gameTime = 0,
   spawnDt = 99, // high so first wave happens right away
@@ -53,7 +54,7 @@ let timeText = Text({
       gameTime += dt
       spawnDt += dt
 
-      timeText.text = `${(((gameTime / 60) | 0) + '').padStart(2, 0)}:${(
+      texts[0].text = `${(((gameTime / 60) | 0) + '').padStart(2, 0)}:${(
         (gameTime % 60 | 0) +
         ''
       ).padStart(2, 0)}`
@@ -111,35 +112,65 @@ let timeText = Text({
       // cause any unforseen problems due to mutation)
       let weapon = deepCopyArray(player.weapon),
         projectile = deepCopyArray(weapon[2])
-      weapon[3] = []
+      weapon[5] = []
       projectile[8] = []
-      player.abilities.map(ability => {
-        ability[1](weapon, projectile)
-      })
-      let [, attackSpeed, , effects] = weapon
+
+      player.abilities
+        // sort abilities by priority
+        .sort((a, b) => (a[3] ?? 0) - (b[3] ?? 0))
+        .map(ability => {
+          ability[2](weapon, projectile, player)
+        })
 
       // attack
-      if (++player.dt > attackSpeed && keyPressed('space')) {
-        player.dt = 0
-        spawnProjectile(projectile, player)
-        effects.map(effect => effect(player))
+      if (++player.dt > weapon[1] && keyPressed('space')) {
+        player.fire(weapon, projectile)
       }
+
+      // update any timers before updating projectiles to
+      // account for any added projectiles (e.g. repeat attack)
+      updateTimers()
 
       projectiles.map(projectile => {
         let collisions = updateAndGetCollisions(projectile),
           { hit, pierce } = projectile,
-          i = 0
+          i = 0,
+          collision
         for (
           ;
-          collisions[i] && hit.length < pierce && !hit.includes(collisions[i]);
+          (collision = collisions[i]) &&
+          collision.isAlive() &&
+          hit.length < pierce &&
+          !hit.includes(collision);
           i++
         ) {
-          hit.push(collisions[i])
-          collisions[i].hp -= projectile.damage
-          projectile.effects.map(effect => effect(collisions[i]))
+          hit.push(collision)
+          collision.hp -= projectile.damage
+          projectile.effects.map(effect => effect(collision))
+          texts.push(
+            Text({
+              text: projectile.damage,
+              x: collision.x,
+              y: collision.y,
+              font: '24px Arial',
+              color: 'yellow',
+              anchor: { x: 0.5, y: 0.5 },
+              ttl: 10,
+              update() {
+                this.opacity -= 1 / this.ttl / 4
+                this.y -= 2
+              },
+              render() {
+                this.draw()
+                this.context.strokeStyle = 'black'
+                this.context.lineWidth = 0.5
+                this.context.strokeText(this.text, 0, 0)
+              }
+            })
+          )
 
-          if (collisions[i].hp <= 0) {
-            collisions[i].ttl = 0
+          if (collision.hp <= 0) {
+            collision.ttl = 0
           }
         }
 
@@ -152,17 +183,25 @@ let timeText = Text({
       // update player
       /////////////////////////////////////////////
       updateAndGetCollisions(player)
-      killCount.text = `Kills: ${enemiesDead}`
 
-      removeDeadProjectiles()
-      removeDeadEnemies()
+      /////////////////////////////////////////////
+      // update texts
+      /////////////////////////////////////////////
+      texts[1].text = `Kills: ${enemiesDead}`
+      texts.map(text => text.update())
     },
     render() {
       player.render()
       projectiles.map(projectile => projectile.render())
       enemies.map(enemy => enemy.render())
-      timeText.render()
-      killCount.render()
+      texts.map(text => text.render())
+
+      // remove after rendering so projectiles look like they
+      // killed the enemy where they hit instead before they
+      // hit
+      removeDeadProjectiles()
+      removeDeadEnemies()
+      texts = texts.filter(text => text.isAlive())
     }
   })
 loop.start()
