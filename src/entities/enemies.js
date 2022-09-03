@@ -17,6 +17,12 @@ function spawnEnemy(x, y, id) {
       hp,
       value,
       behaviors,
+      status: [
+        [0, 0], // chill, duration
+        [0, 0], // poison, duration
+        [0, 0], // shock, duration
+        [0, 0] // weaken, duration
+      ],
       render() {
         let { size, context, color } = this
         context.beginPath()
@@ -25,30 +31,39 @@ function spawnEnemy(x, y, id) {
         context.fill()
       },
       update(player) {
-        let velocityVector = this.velocity
+        let { velocity, speed, status, behaviors } = this,
+          velocityVector = velocity,
+          maxSpeed = speed - speed * status[0][0],
+          angle = degToRad(5)
 
-        this.behaviors.map(behavior => {
+        behaviors.map(behavior => {
           velocityVector = velocityVector.add(behavior(this, player))
         })
 
         // smoothly transition enemy from current velocity to
         // new velocity by capping rotation to a max value
-        let angle = degToRad(5)
-        if (this.velocity.angle(velocityVector) > angle) {
+        if (velocity.angle(velocityVector) > angle) {
           // determine if the velocityVector is clockwise or
           // counter-clockwise from the current velocity
           // @see https://stackoverflow.com/a/13221874/2124254
           let dot =
-              this.velocity.x * -velocityVector.y +
-              this.velocity.y * velocityVector.x,
+              velocity.x * -velocityVector.y + velocity.y * velocityVector.x,
             sign = dot > 0 ? -1 : 1,
-            { x, y } = rotatePoint(this.velocity, angle * sign)
+            { x, y } = rotatePoint(velocity, angle * sign)
           velocityVector = Vector(x, y)
         }
 
-        this.velocity = velocityVector.normalize().scale(this.speed)
+        this.velocity = velocityVector.normalize().scale(maxSpeed)
 
         this.advance()
+
+        status.map(effect => {
+          if (effect[1]) {
+            if (--effect[1] == 0) {
+              effect[0] = 0
+            }
+          }
+        })
       }
     })
   )

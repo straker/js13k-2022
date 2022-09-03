@@ -1,3 +1,5 @@
+import { deepCopyArray } from '../utils.js'
+
 /*
   index stat properties:
   0 - id
@@ -8,11 +10,19 @@
   5 - pierce
   6 - update function
   7 - render function
-  8 - on hit effects (added dynamically as projectile has no inherit effects)
+  8 - status effects [
+        0 - chill %
+        1 - poison %
+        2 - shock %
+        3 - weaken %
+        4 - potency
+        5 - duration (frames)
+      ]
 
   ===== everything beyond this point is for ability modifications
 
-  9 - num projectiles on explosion
+  9 - on hit effects (added dynamically as projectile has no inherit effects)
+  10 - num projectiles on explosion
 */
 
 const projectiles = [
@@ -44,7 +54,7 @@ const projectiles = [
     1,
     15,
     12,
-    10,
+    5,
     25,
     1,
     function () {
@@ -65,3 +75,11 @@ const projectiles = [
 ]
 
 export default projectiles
+
+export function resetProjectile(projectile) {
+  let proj = deepCopyArray(projectile)
+  proj[8] = proj[8] ?? [0, 0, 0, 0, 0.2, 120]
+  proj[9] = []
+  proj[10] = 0
+  return proj
+}

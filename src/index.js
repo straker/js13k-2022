@@ -4,7 +4,7 @@ import { keyPressed, GameLoop, Text } from './libs/kontra.mjs'
 import './init.js'
 import './globals.js'
 
-import player from './entities/player.js'
+import { player, resetPlayer } from './entities/player.js'
 import { projectiles, removeDeadProjectiles } from './entities/projectiles.js'
 import {
   enemies,
@@ -17,8 +17,10 @@ import {
   spawnExperience,
   removeDeadExperience
 } from './entities/experience.js'
+import { resetWeapon } from './tables/weapons.js'
+import { resetProjectile } from './tables/projectiles.js'
 import { addToGrid, clearGrid } from './grid.js'
-import { easeInSine, deepCopyArray, updateAndGetCollisions } from './utils.js'
+import { easeInSine, updateAndGetCollisions } from './utils.js'
 import { updateTimers } from './timer.js'
 import { levelUp } from './level-up.js'
 
@@ -75,7 +77,7 @@ let texts = [
       // update enemies
       /////////////////////////////////////////////
       // spawn enemies every 5 seconds
-      if (spawnDt >= 5) {
+      if (enemies.length < 400 && spawnDt >= 5) {
         spawnDt = 0
 
         // use a tween function to slowly increase the number
@@ -97,19 +99,16 @@ let texts = [
       // they move first and and no collision happens where
       // they first spawn)
 
-      // apply abilities (deep copy objects so we don't
-      // cause any unforseen problems due to mutation)
-      let weapon = deepCopyArray(player.weapon),
-        projectile = deepCopyArray(weapon[2])
-      player.stats.length = 0
-      weapon[5] = []
-      projectile[8] = []
+      // apply abilities
+      let weapon = resetWeapon(player.weapon),
+        projectile = resetProjectile(weapon[2])
+      resetPlayer()
 
       player.abilities
         // sort abilities by priority
-        .sort((a, b) => (a[4] ?? 0) - (b[4] ?? 0))
+        .sort((a, b) => (a[3] ?? 0) - (b[3] ?? 0))
         .map(ability => {
-          ability[3](weapon, projectile, player)
+          ability[2](weapon, projectile, player)
         })
 
       // attack
@@ -129,8 +128,10 @@ let texts = [
         for (; (collision = collisions[i]) && hit.length < pierce; i++) {
           if (collision.isAlive() && !hit.includes(collision)) {
             hit.push(collision)
-            collision.hp -= projectile.damage
+            // apply effects before dealing damage so effect
+            // can increase damage
             projectile.effects.map(effect => effect(collision))
+            collision.hp -= projectile.damage
 
             // damage text
             texts.push(
@@ -153,9 +154,8 @@ let texts = [
               })
             )
 
-            spawnExperience(collision)
-
             if (collision.hp <= 0) {
+              spawnExperience(collision)
               collision.ttl = 0
             }
           }

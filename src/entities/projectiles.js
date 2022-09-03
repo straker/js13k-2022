@@ -9,7 +9,18 @@ export function spawnProjectile(
   angle,
   padding = { x: 0, y: 0 }
 ) {
-  let [, speed, size, damage, ttl, pierce, update, render, effects] = projectile
+  let [
+    ,
+    speed,
+    size,
+    damage,
+    ttl,
+    pierce,
+    update,
+    render,
+    statusEffects,
+    effects
+  ] = projectile
   projectiles.push(
     Sprite({
       speed,
@@ -19,6 +30,7 @@ export function spawnProjectile(
       pierce,
       update,
       render,
+      statusEffects,
       effects,
       // a projectile can only hit each enemy once during
       // its lifetime

@@ -1,5 +1,6 @@
 import { randInt, GameLoop, Button, Text } from './libs/kontra.mjs'
 import abilityTable from './tables/abilities.js'
+import { spawnCard } from './entities/card.js'
 
 // taking drop rate algorithm from slay the spire
 // @see https://docs.google.com/spreadsheets/d/1ZsxNXebbELpcCi8N7FVOTNGdX_K9-BRC_LMgx4TORo4/edit#gid=113279270
@@ -26,20 +27,7 @@ let statCommonPercent = 60,
   })
 
 export function levelUp(cb) {
-  abilities = [
-    Button({
-      x: canvas.height - 100,
-      y: canvas.width / 2,
-      padX: 10,
-      padY: 10,
-      color: 'white',
-      text: {
-        text: 'Skip',
-        color: '#333',
-        font: '18px Arial'
-      }
-    })
-  ]
+  abilities = []
   texts = []
   getAbilities(ability => {
     loop.stop()
@@ -85,51 +73,41 @@ function getAbilities(cb) {
       }
     }
 
-    availableAbilities = abilityTable.filter(ability => ability[1] == rarity)
+    availableAbilities = abilityTable.filter(ability => ability[0] == rarity)
     do {
       ability = availableAbilities[randInt(0, availableAbilities.length - 1)]
       // don't let the same ability appear twice for selection
     } while (abilities.find(ab => ab.ability == ability))
 
-    abilities.push(
-      Button({
-        x,
-        y,
-        ability,
-        width: 150,
-        height: 200,
-        color: rarity == 0 ? 'lightgrey' : rarity == 1 ? 'lightblue' : 'gold',
-        text: {
-          y: 10,
-          text: ability[2],
-          color: '#333',
-          width: 115,
-          font: '14px Arial',
-          lineHeight: 1.25,
-          anchor: { x: 0.5, y: 0 }
-        },
-        anchor: { x: 0.5, y: 0.5 },
-        onUp() {
-          cb(ability)
-        },
-        render() {
-          this.draw()
-
-          context.fillStyle = 'white'
-          context.fillRect(10, this.height / 2, this.width - 20, 90)
-
-          context.fillStyle = '#333'
-          context.strokeStyle = '#333'
-          context.fillRect(10, 10, this.width - 20, 75)
-          context.strokeRect(10, this.height / 2, this.width - 20, 90)
-
-          if (this.focused || this.hovered) {
-            this.context.lineWidth = 3
-            this.context.strokeStyle = 'orange'
-            this.context.strokeRect(-5, -5, this.width + 10, this.height + 10)
-          }
-        }
-      })
-    )
+    abilities.push(spawnCard(x, y, ability, cb))
   }
+
+  abilities.push(
+    Button({
+      x: canvas.width / 2,
+      y: canvas.height - 100,
+      padX: 20,
+      padY: 10,
+      anchor: { x: 0.5, y: 0.5 },
+      color: 'white',
+      text: {
+        text: 'Skip',
+        color: '#333',
+        font: '18px Arial',
+        anchor: { x: 0.5, y: 0.5 }
+      },
+      onUp() {
+        cb()
+      },
+      render() {
+        this.draw()
+
+        if (this.focused || this.hovered) {
+          context.lineWidth = 3
+          context.strokeStyle = 'orange'
+          context.strokeRect(-5, -5, this.width + 10, this.height + 10)
+        }
+      }
+    })
+  )
 }

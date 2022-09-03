@@ -6,19 +6,34 @@ import { spawnProjectile } from '../entities/projectiles.js'
   all abilities take same parameters: weapon, projectile
 
   index stat properties:
-  0 - id
-  1 - rarity (0 = common, 1 = uncommon, 2 = rare)
-  2 - text
-  3 - effect function
-  4 - priority (higher = applies later)
+  0 - rarity (0 = common, 1 = uncommon, 2 = rare)
+  1 - text
+  2 - effect function
+  3 - priority (higher = applies later)
 */
 
 let numProjectiles = 0
 
+function addStatusEffect(projectile) {
+  function applyStatus(entity) {
+    let statusEffects = projectile[8]
+    for (let i = 0; i < 4; i++) {
+      if (statusEffects[i] && random() <= statusEffects[i]) {
+        entity.status[i][0] = statusEffects[4]
+        entity.status[i][1] = statusEffects[5]
+      }
+    }
+  }
+
+  // only apply status effects once
+  if (!projectile[9].includes(applyStatus)) {
+    projectile[9].push(applyStatus)
+  }
+}
+
 const abilities = [
   [
     0,
-    0, // TODO: uncommon, but need 3 commons for right now
     'Dash forward on attack',
     weapon => {
       weapon[5].push(player => {
@@ -28,38 +43,36 @@ const abilities = [
       })
     }
   ],
-  [1, 0, '+1 Projectile', weapon => weapon[4]++],
-  [2, 0, 'Projectile Size +3', (weapon, projectile) => (projectile[2] += 3)],
-  [3, 1, 'Projectile Damage +5', (weapon, projectile) => (projectile[3] += 5)],
-  [4, 1, 'Projectile Pierce +1', (weapon, projectile) => projectile[5]++],
+  [0, '+1 Projectile', weapon => weapon[4]++],
+  [0, 'Projectile Size +3', (weapon, projectile) => (projectile[2] += 3)],
+  [1, 'Projectile Damage +5', (weapon, projectile) => (projectile[3] += 5)],
+  [1, 'Projectile Pierce +1', (weapon, projectile) => projectile[5]++],
   [
-    5,
     2,
     'Repeat attack after a short delay',
     (weapon, projectile, player) => {
       // don't add the repeat attack on to the repeated attack
+      // TODO: handle multiple repeat attacks
       let wep = deepCopyArray(weapon)
       weapon[5].push(() => {
-        addTimer(20, () => player.fire(wep, projectile))
+        addTimer(max(weapon[1] - 10, 5), () => player.fire(wep, projectile))
       })
     },
     9 // repeat attack should have all abilities
   ],
   [
-    6,
     2,
-    'Double number of Projectiles',
+    'Double total number of Projectiles',
     weapon => (weapon[4] *= 2),
     5 // double after other abilities add projectiles
   ],
   // TODO: need a way to reset global numProjectiles after
   // removing the ability
   [
-    7,
     2,
-    'Every 1 minute gain: +1 Projectile',
+    'Every one minute gain: +1 Projectile',
     weapon => {
-      weapon[6] = (weapon[6] ?? 0) + 1
+      weapon[6] += 1
 
       // only add total num projectiles once
       if (weapon[6] === 1) {
@@ -73,18 +86,17 @@ const abilities = [
     }
   ],
   [
-    8,
     1,
-    'Enemies explode into 3 Projectiles when killed. Projectiles deal 25% damage.',
+    'Enemies explode into small Projectiles when killed. +3 Projectiles per card',
     (weapon, projectile) => {
-      projectile[9] = (projectile[9] ?? 0) + 3
+      projectile[10] += 3
 
-      if (projectile[9] === 3) {
+      if (projectile[10] === 3) {
         // don't add explode projectile to the exploding
         // projectile
         let proj = deepCopyArray(projectile)
         projectile[8].push(entity => {
-          let num = weapon[4] + projectile[9],
+          let num = weapon[4] + projectile[10],
             angle = degToRad(360 / num),
             i = 0
           // reduce stats
@@ -102,39 +114,115 @@ const abilities = [
     },
     8 // explosion should get all projectile bonuses
   ],
-  [9, 0, 'Attack Speed +15%', weapon => (weapon[1] -= weapon[1] * 0.15)],
+  [0, 'Attack Speed +5%', weapon => (weapon[1] -= weapon[1] * 0.05)],
   [
-    10,
     0,
+    'Move Speed +5%',
+    (weapon, projectile, player) => {
+      player.speed *= 1.05
+    }
+  ],
+  [
+    0,
+    'Health +5%',
+    (weapon, projectile, player) => {
+      player.hp *= 1.05
+    }
+  ],
+  [1, 'Attack Speed +15%', weapon => (weapon[1] -= weapon[1] * 0.15)],
+  [
+    1,
     'Move Speed +15%',
     (weapon, projectile, player) => {
-      player.stats[0] = (player.stats[0] ?? 0) + 0.15
+      player.speed *= 1.15
     }
   ],
   [
-    11,
-    0,
+    1,
     'Health +15%',
     (weapon, projectile, player) => {
-      player.stats[0] = (player.stats[1] ?? 0) + 0.15
-    }
-  ],
-  [12, 1, 'Attack Speed +25%', weapon => (weapon[1] -= weapon[1] * 0.25)],
-  [
-    13,
-    1,
-    'Move Speed +25%',
-    (weapon, projectile, player) => {
-      player.stats[0] = (player.stats[0] ?? 0) + 0.25
+      player.hp *= 1.15
     }
   ],
   [
-    14,
-    1,
-    'Health +25%',
+    0,
+    'Pickup Distance +10%',
     (weapon, projectile, player) => {
-      player.stats[0] = (player.stats[1] ?? 0) + 0.25
+      player.size *= 1.1
     }
+  ],
+  [
+    1,
+    'Pickup Distance +10%',
+    (weapon, projectile, player) => {
+      player.size *= 1.1
+    }
+  ],
+  [
+    0,
+    '+10% to apply Chill status on hit (slow enemy movement)',
+    (weapon, projectile) => {
+      projectile[8][0] += 0.1
+      addStatusEffect(projectile)
+    }
+  ],
+  [
+    0,
+    '+10% to apply Poison status on hit (damage over time)',
+    (weapon, projectile) => {
+      projectile[8][1] += 0.1
+      addStatusEffect(projectile)
+    }
+  ],
+  [
+    0,
+    '+10% to apply Shock status on hit (increase damage taken)',
+    (weapon, projectile) => {
+      projectile[8][2] += 0.1
+      addStatusEffect(projectile)
+    }
+  ],
+  [
+    0,
+    '+10% to apply Weaken status on hit (reduce damage dealt)',
+    (weapon, projectile) => {
+      projectile[8][3] += 0.1
+      addStatusEffect(projectile)
+    }
+  ],
+  [
+    1,
+    'Status chance +10%',
+    (weapon, projectile) => {
+      for (let i = 0; i < 4; i++) {
+        if (projectile[8][i] > 0) {
+          projectile[8][i] += 0.1
+        }
+      }
+      addStatusEffect(projectile)
+    },
+    5 // apply after other status effect cards
+  ],
+  [
+    1,
+    'Status duration +2 seconds',
+    (weapon, projectile) => (projectile[8][5] += 120)
+  ],
+  [1, 'Status potency +10%', (weapon, projectile) => (projectile[8][4] += 0.1)],
+  [
+    2,
+    'Deal +20% damage to enemies with a stats effect',
+    (weapon, projectile) => {
+      projectile[9].push(entity => {
+        for (let i = 0; i < 4; i++) {
+          if (entity.status[i][1]) {
+            projectile[3] *= 1.2
+            break
+          }
+        }
+      })
+    },
+    5 // apply after other abilities add damage
   ]
 ]
 
