@@ -11,8 +11,7 @@ import projectiles from './projectiles.js'
 
   ===== everything beyond this point is for ability modifications
 
-  6 - num projectiles every n time
-  7 - total num projectiles every n time
+  6 - num projectiles to add every n time
 */
 
 const weapons = [

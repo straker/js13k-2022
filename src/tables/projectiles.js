@@ -13,22 +13,6 @@
   ===== everything beyond this point is for ability modifications
 
   9 - num projectiles on explosion
-
-
-
-  possible stats
-  id
-  draw
-  projectile_speed
-  projectile_size
-  projectile_spread
-  projectile_area
-  projectile_piercing
-  projectile_bounce
-  effects {
-    knockback
-
-  }
 */
 
 const projectiles = [

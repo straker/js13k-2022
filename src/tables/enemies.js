@@ -6,29 +6,13 @@ import behaviors from './behaviors.js'
   2 - size (radius)
   3 - color
   4 - hp
-  5 - behaviors
-
-
-
-  possible stats
-  id
-  draw
-  xp
-  projectile_speed
-  projectile_size
-  projectile_spread
-  projectile_area
-  projectile_piercing
-  projectile_bounce
-  effects {
-    knockback
-
-  }
+  5 - xp
+  6 - behaviors
 */
 
 const enemies = [
-  [0, 1, 10, 'red', 10, [behaviors[0], behaviors[1](22)]],
-  [1, 1, 10, 'yellow', 10, [behaviors[0], behaviors[1](22), behaviors[2](150)]]
+  [0, 1, 10, 'red', 10, 1, [behaviors[0], behaviors[1](22)]],
+  [1, 1, 10, 'yellow', 10, 5, [behaviors[0], behaviors[1](22), behaviors[2](150)]]
 ]
 
 export default enemies

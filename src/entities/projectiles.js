@@ -1,4 +1,5 @@
 import { degToRad, Sprite } from '../libs/kontra.mjs'
+import { removeDead } from '../utils.js'
 
 export let projectiles = []
 
@@ -44,5 +45,5 @@ export function spawnWeaponProjectiles(projectile, player, weapon) {
 }
 
 export function removeDeadProjectiles() {
-  projectiles = projectiles.filter(projectile => projectile.isAlive())
+  projectiles = removeDead(projectiles)
 }

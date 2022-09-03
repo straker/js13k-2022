@@ -12,7 +12,11 @@ esbuild.build({
         velocity: true,
         opacity: true,
         rotation: true,
-        anchor: true
+        anchor: true,
+        group: true
+      },
+      text: {
+        autoNewline: true
       },
       vector: {
         angle: true,

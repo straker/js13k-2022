@@ -42,7 +42,7 @@ const behaviors = [
   },
 
   // avoid other enemies
-  distance => enemy => avoidance(enemy, getFromGrid(enemy), distance),
+  distance => enemy => avoidance(enemy, getFromGrid(enemy, 0), distance),
 
   // avoid player
   distance => (enemy, player) => avoidance(enemy, player, distance)

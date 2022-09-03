@@ -15,7 +15,9 @@ module.exports = {
     atan2: 'readonly',
     max: 'readonly',
     min: 'readonly',
-    random: 'readonly'
+    random: 'readonly',
+    canvas: 'readonly',
+    context: 'readonly'
   },
   rules: {
     'no-debugger': 0,
