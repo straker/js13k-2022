@@ -1,5 +1,6 @@
 import { degToRad, rotatePoint, Sprite, Vector } from '../libs/kontra.mjs'
 import enemyTable from '../tables/enemies.js'
+import { spawnDamageText } from './damage-text.js'
 
 export let enemiesDead = 0
 export let enemies = []
@@ -23,8 +24,10 @@ function spawnEnemy(x, y, id) {
         [0, 0], // shock, duration
         [0, 0] // weaken, duration
       ],
+      // 23 = ability: increase damage from all sources
+      23: 0,
       render() {
-        let { size, context, color } = this
+        let { size, color } = this
         context.beginPath()
         context.fillStyle = color
         context.arc(0, 0, size, 0, PI * 2)
@@ -35,6 +38,12 @@ function spawnEnemy(x, y, id) {
           velocityVector = velocity,
           maxSpeed = speed - speed * status[0][0],
           angle = degToRad(5)
+
+        // apply poison every 60 frames
+        if (status[1][0] && status[1][1] % 60 == 0) {
+          let damage = round(10 * status[1][0])
+          this.takeDamage(damage, 1, 'lightgreen')
+        }
 
         behaviors.map(behavior => {
           velocityVector = velocityVector.add(behavior(this, player))
@@ -64,6 +73,27 @@ function spawnEnemy(x, y, id) {
             }
           }
         })
+      },
+      /*
+        types:
+        0 - projectile
+        1 - poison
+      */
+      takeDamage(damage, type, color) {
+        // shock status
+        if (this.status[2][1] && type == 0) {
+          damage = damage + round(damage * this.status[2][0])
+        }
+
+        // ability: increase damage from all sources
+        for (let i = 0; i < 4; i++) {
+          if (this.status[i][1]) {
+            damage = damage + round(damage * this[23])
+            break
+          }
+        }
+        this.hp -= damage
+        spawnDamageText(this, damage, color)
       }
     })
   )

@@ -16,6 +16,7 @@ module.exports = {
     max: 'readonly',
     min: 'readonly',
     random: 'readonly',
+    round: 'readonly',
     canvas: 'readonly',
     context: 'readonly'
   },

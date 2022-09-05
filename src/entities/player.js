@@ -14,7 +14,7 @@ export let player = Sprite({
   weapon: weaponsTable[1],
   dt: 99, // high so first attack happens right away
   facingRot: 0,
-  abilities: [abilityTable[abilityTable.length - 1]],
+  abilities: [abilityTable[16]],
   xp: 0,
   lvl: 1,
   reqXp: 5,

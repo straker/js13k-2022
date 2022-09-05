@@ -4,7 +4,7 @@ const kontra = require('esbuild-plugin-kontra')
 esbuild.build({
   entryPoints: ['src/index.js'],
   bundle: true,
-  outdir: 'dist',
+  outdir: 'build',
   plugins: [
     kontra({
       gameObject: {

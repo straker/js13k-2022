@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "http-server -s",
-    "clean": "rm -rf dist",
+    "clean": "rm -rf build dist",
     "build": "npm run clean && node ./build.js",
-    "pack": "js13k-packer index.dist.html dist --bundle false -o js13k-2022.zip",
+    "pack": "js13k-packer index.build.html dist --bundle false --pack -o js13k-2022.zip",
     "prepare": "husky install",
     "eslint": "eslint --color --format stylish src/**/*.js"
   },

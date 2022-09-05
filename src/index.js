@@ -17,6 +17,7 @@ import {
   spawnExperience,
   removeDeadExperience
 } from './entities/experience.js'
+import { damageTexts, removeDeadDamageTexts } from './entities/damage-text.js'
 import { resetWeapon } from './tables/weapons.js'
 import { resetProjectile } from './tables/projectiles.js'
 import { addToGrid, clearGrid } from './grid.js'
@@ -88,7 +89,13 @@ let texts = [
 
       enemies.map(enemy => {
         enemy.update(player)
-        addToGrid(enemy)
+
+        if (enemy.hp <= 0) {
+          spawnExperience(enemy)
+          enemy.ttl = 0
+        } else {
+          addToGrid(enemy)
+        }
       })
 
       /////////////////////////////////////////////
@@ -128,36 +135,10 @@ let texts = [
         for (; (collision = collisions[i]) && hit.length < pierce; i++) {
           if (collision.isAlive() && !hit.includes(collision)) {
             hit.push(collision)
-            // apply effects before dealing damage so effect
+            // apply effects before dealing damage so effects
             // can increase damage
-            projectile.effects.map(effect => effect(collision))
-            collision.hp -= projectile.damage
-
-            // damage text
-            texts.push(
-              Text({
-                text: projectile.damage,
-                x: collision.x,
-                y: collision.y,
-                font: '24px Arial',
-                color: 'yellow',
-                strokeColor: 'black',
-                storkeSize: 0.5,
-                anchor: { x: 0.5, y: 0.5 },
-                update() {
-                  this.opacity -= 0.025
-                  this.y -= 2
-                  if (this.opacity <= 0) {
-                    this.ttl = 0
-                  }
-                }
-              })
-            )
-
-            if (collision.hp <= 0) {
-              spawnExperience(collision)
-              collision.ttl = 0
-            }
+            projectile.effects.map(effect => effect(collision, projectile))
+            collision.takeDamage(projectile.damage, 0)
           }
         }
 
@@ -210,7 +191,7 @@ let texts = [
       // update texts
       /////////////////////////////////////////////
       texts[1].text = `Kills: ${enemiesDead}`
-      texts.map(text => text.update())
+      damageTexts.map(text => text.update())
     },
     render() {
       experiences.map(experience => experience.render())
@@ -228,6 +209,7 @@ let texts = [
       context.fillRect(13, 13, (width - 6) * fill, 19)
 
       texts.map(text => text.render())
+      damageTexts.map(text => text.render())
 
       // remove after rendering so projectiles look like they
       // killed the enemy where they hit instead before they
@@ -235,6 +217,7 @@ let texts = [
       removeDeadProjectiles()
       removeDeadEnemies()
       removeDeadExperience()
+      removeDeadDamageTexts()
       texts = texts.filter(text => text.isAlive())
     }
   })

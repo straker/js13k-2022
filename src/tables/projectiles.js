@@ -15,7 +15,7 @@ import { deepCopyArray } from '../utils.js'
         1 - poison %
         2 - shock %
         3 - weaken %
-        4 - potency
+        4 - effectiveness
         5 - duration (frames)
       ]
 
@@ -23,6 +23,7 @@ import { deepCopyArray } from '../utils.js'
 
   9 - on hit effects (added dynamically as projectile has no inherit effects)
   10 - num projectiles on explosion
+  11 - damage % to add to enemies with stats effect
 */
 
 const projectiles = [
@@ -78,8 +79,10 @@ export default projectiles
 
 export function resetProjectile(projectile) {
   let proj = deepCopyArray(projectile)
-  proj[8] = proj[8] ?? [0, 0, 0, 0, 0.2, 120]
+  // set time to just below an increment of 60 so that status
+  // effects like poison don't trigger immediately
+  proj[8] = proj[8] ?? [0, 0, 0, 0, 0.2, 239]
   proj[9] = []
-  proj[10] = 0
+  proj[10] = proj[11] = 0
   return proj
 }
