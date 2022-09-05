@@ -4,6 +4,7 @@
     - clamp opacity between 0 and 1
     - keyPressed accept array of keys
     - normalize zero vector
+    - stroke text
 */
 let noop = () => {};
 
@@ -2766,6 +2767,17 @@ class Text extends GameObject {
       context.textAlign = textAlign;
       context.fillStyle = this.color;
       context.font = this.font;
+
+      if (this.strokeColor) {
+        context.strokeStyle = this.strokeColor;
+        context.lineWidth = this.strokeWidth;
+        context.strokeText(
+          str,
+          alignX,
+          this._fs * this.lineHeight * index
+        )
+      }
+
       context.fillText(
         str,
         alignX,

@@ -4,7 +4,7 @@ const kontra = require('esbuild-plugin-kontra')
 esbuild.build({
   entryPoints: ['src/index.js'],
   bundle: true,
-  outdir: 'dist',
+  outdir: 'build',
   plugins: [
     kontra({
       gameObject: {
@@ -12,7 +12,11 @@ esbuild.build({
         velocity: true,
         opacity: true,
         rotation: true,
-        anchor: true
+        anchor: true,
+        group: true
+      },
+      text: {
+        autoNewline: true
       },
       vector: {
         angle: true,

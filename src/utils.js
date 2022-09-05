@@ -32,7 +32,7 @@ export function deepCopyArray(array) {
 // in order to calculate collision for a fast moving object
 // we need to move the object by a fixed speed and check for
 // collision at every interval
-export function updateAndGetCollisions(obj) {
+export function updateAndGetCollisions(obj, types) {
   // the fixed step size should not be larger than the smallest
   // enemy or enemy projectile diameter
   let fixedStep = 15,
@@ -49,7 +49,7 @@ export function updateAndGetCollisions(obj) {
     obj.x = x
     obj.y = y
 
-    let colliders = getFromGrid(obj),
+    let colliders = getFromGrid(obj, types),
       i = colliders.length
     while (i--) {
       let collider = colliders[i]
@@ -68,4 +68,8 @@ export function updateAndGetCollisions(obj) {
   obj.ttl--
 
   return collisions
+}
+
+export function removeDead(array) {
+  return array.filter(item => item.isAlive())
 }

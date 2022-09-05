@@ -1,9 +1,6 @@
-import { getCanvas } from './libs/kontra.mjs'
-
 export let gridSize = 100
 
 let grid = [],
-  canvas = getCanvas(),
   maxRow = (canvas.height / gridSize) | 0,
   maxCol = (canvas.width / gridSize) | 0
 clearGrid()
@@ -31,13 +28,14 @@ export function addToGrid(obj) {
   }
 }
 
-export function getFromGrid(obj) {
+export function getFromGrid(obj, types) {
+  types = Array.isArray(types) ? types : [types]
   let [row, endRow, col, endCol] = getPos(obj),
     objects = []
   for (let r = row; r >= 0 && r <= endRow && r <= maxRow; r++) {
     for (let c = col; c >= 0 && c <= endCol && c <= maxCol; c++) {
       grid[r][c].map(item => {
-        if (!objects.includes(item)) {
+        if (!objects.includes(item) && types.includes(item.type)) {
           objects.push(item)
         }
       })
@@ -58,7 +56,6 @@ export function clearGrid() {
 
 // TODO: delete before submit
 // export function renderGrid() {
-//   let context = canvas.getContext('2d')
 //   context.strokeStyle = 'yellow'
 //   context.lineWidth = 3
 //   for (let r = 0; r < canvas.height; r+= gridSize) {
