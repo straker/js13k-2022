@@ -21,7 +21,12 @@ import { damageTexts, removeDeadDamageTexts } from './entities/damage-text.js'
 import { resetWeapon } from './tables/weapons.js'
 import { resetProjectile } from './tables/projectiles.js'
 import { addToGrid, clearGrid } from './grid.js'
-import { easeInSine, updateAndGetCollisions } from './utils.js'
+import {
+  easeInSine,
+  easeLinear,
+  updateAndGetCollisions,
+  fillBar
+} from './utils.js'
 import { updateTimers } from './timer.js'
 import { levelUp } from './level-up.js'
 
@@ -83,8 +88,9 @@ let texts = [
 
         // use a tween function to slowly increase the number
         // of enemies
-        let numEnemies = easeInSine(gameTime, 5, 100, totalGameTime) | 0
-        spawnEnemies(numEnemies, 0)
+        let numEnemies = easeInSine(gameTime, 5, 100, totalGameTime) | 0,
+          modifier = easeLinear(gameTime, 1, 5, totalGameTime)
+        spawnEnemies(numEnemies, 0, modifier)
       }
 
       enemies.map(enemy => {
@@ -200,13 +206,16 @@ let texts = [
       enemies.map(enemy => enemy.render())
 
       // experience bar
-      context.strokeStyle = 'white'
-      context.fillStyle = '#60AC53'
-      context.lineWidth = 3
-      let width = canvas.width - 20,
-        fill = player.xp / player.reqXp
-      context.strokeRect(10, 10, width, 25)
-      context.fillRect(13, 13, (width - 6) * fill, 19)
+      fillBar(
+        10,
+        10,
+        canvas.width - 20,
+        25,
+        3,
+        '#60AC53',
+        player.xp,
+        player.reqXp
+      )
 
       texts.map(text => text.render())
       damageTexts.map(text => text.render())

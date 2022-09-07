@@ -79,9 +79,9 @@ export default projectiles
 
 export function resetProjectile(projectile) {
   let proj = deepCopyArray(projectile)
-  // set time to just below an increment of 60 so that status
+  // set time below an increment of 60 so that status
   // effects like poison don't trigger immediately
-  proj[8] = proj[8] ?? [0, 0, 0, 0, 0.2, 239]
+  proj[8] = proj[8] ?? [0, 0, 0, 0, 0.2, 210]
   proj[9] = []
   proj[10] = proj[11] = 0
   return proj

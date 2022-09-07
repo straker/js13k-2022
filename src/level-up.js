@@ -76,6 +76,11 @@ function getAbilities(cb) {
     availableAbilities = abilityTable.filter(ability => ability[0] == rarity)
     do {
       ability = availableAbilities[randInt(0, availableAbilities.length - 1)]
+
+      // TODO: remove
+      if (abilities.length === 0) {
+        ability = abilityTable[24]
+      }
       // don't let the same ability appear twice for selection
     } while (abilities.find(ab => ab.ability == ability))
 

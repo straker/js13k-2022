@@ -5,8 +5,8 @@ import { spawnDamageText } from './damage-text.js'
 export let enemiesDead = 0
 export let enemies = []
 
-function spawnEnemy(x, y, id) {
-  let [, speed, size, color, hp, value, behaviors] = enemyTable[id]
+function spawnEnemy(x, y, id, modifier) {
+  let [, speed, size, color, hp, damage, value, behaviors] = enemyTable[id]
   enemies.push(
     Sprite({
       type: 0,
@@ -14,8 +14,9 @@ function spawnEnemy(x, y, id) {
       y,
       color,
       size,
-      speed,
-      hp,
+      speed: speed * max(modifier / 2, 1),
+      hp: round(hp * modifier),
+      damage: round(damage * modifier),
       value,
       behaviors,
       status: [
@@ -99,14 +100,14 @@ function spawnEnemy(x, y, id) {
   )
 }
 
-export function spawnEnemies(num, id) {
+export function spawnEnemies(num, id, modifier) {
   for (let i = num; i--; ) {
     let angle = degToRad(random() * 360)
     let { x, y } = rotatePoint(
       { x: canvas.width / 2, y: canvas.height / 2 },
       angle
     )
-    spawnEnemy(x + canvas.width / 2, y + canvas.height / 2, id)
+    spawnEnemy(x + canvas.width / 2, y + canvas.height / 2, id, modifier)
   }
 }
 

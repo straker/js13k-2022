@@ -263,6 +263,29 @@ const abilities = [
       projectile[11] += 0.2
       addIncreaseDamage(projectile)
     }
+  ],
+  // 24
+  // TODO: figure out how to give player a one-time shield
+  // boost when they take the ability
+  [
+    0,
+    'Gain +20 shield. Shields absorb damage and recover slowly after a delay.',
+    (weapon, projectile, player) => (player.shields[1] += 20)
+  ],
+  [
+    1,
+    'Shield recovery delay -20%',
+    (weapon, projectile, player) => (player.shields[2] *= 1.2)
+  ],
+  [
+    1,
+    'Shield recovery speed +20%',
+    (weapon, projectile, player) => (player.shields[3] *= 1.2)
+  ],
+  [
+    1,
+    'Shields deal +20% of Projectile damage to the attacker',
+    (weapon, projectile, player) => (player.shields[4] += 0.2)
   ]
 ]
 
