@@ -3,6 +3,7 @@ import weaponsTable from '../tables/weapons.js'
 import abilityTable from '../tables/abilities.js'
 import { getAngle, fillBar } from '../utils.js'
 import { spawnWeaponProjectiles } from './projectiles.js'
+import { spawnDamageText } from './damage-text.js'
 
 export let player = Sprite({
   x: canvas.width / 2,
@@ -14,7 +15,7 @@ export let player = Sprite({
   weapon: weaponsTable[1],
   dt: 99, // high so first attack happens right away
   facingRot: 0,
-  abilities: [abilityTable[24]],
+  abilities: [abilityTable[31]],
   xp: 0,
   lvl: 1,
   reqXp: 5,
@@ -27,7 +28,8 @@ export let player = Sprite({
     // 1 - max shields
     // 2 - recovery delay
     // 3 - recovery speed
-    // 4 - spike damage
+    // 4 - spike % damage
+    // 5 - num shields to add every n time
   ],
   shieldDt: 0,
   update() {
@@ -58,7 +60,7 @@ export let player = Sprite({
     // recover shields after 10s, full recovery in 10s
     // @see https://halo.fandom.com/wiki/Energy_shielding#Energy_shields_in-game
     // @see https://www.halopedia.org/Energy_shielding#Gameplay
-    if (shields[0] < shields[1] && ++this.shieldDt >= 600 / shields[2]) {
+    if (++this.shieldDt >= 600 / shields[2] && shields[0] < shields[1]) {
       shields[0] = min(shields[0] + shields[1] / (600 / shields[3]), shields[1])
     }
   },
@@ -94,9 +96,34 @@ export let player = Sprite({
     spawnWeaponProjectiles(projectile, this, weapon)
     weapon[5].map(effect => effect(this))
   },
-  takeDamage() {
+  takeDamage(damage, type, entity, projectile) {
     // reset shield delay timer when hit
     this.shieldDt = 0
+    damage = round(damage)
+    let { x, y, shields } = this,
+      curShields = round(shields[0]),
+      diff = damage - curShields
+
+    // shield spike damage
+    if (shields[0] && shields[4]) {
+      entity.takeDamage(projectile[3] * shields[4], 0)
+    }
+
+    // take from shields first
+    if (diff <= 0) {
+      shields[0] -= damage
+      spawnDamageText(this, damage, 'skyblue')
+    } else {
+      if (shields[0]) {
+        spawnDamageText({ x: x - 10, y }, curShields, 'skyblue')
+        spawnDamageText({ x: x + 10, y }, diff, '#E10600')
+        shields[0] = 0
+        this.hp -= diff
+      } else {
+        this.hp -= damage
+        spawnDamageText(this, diff, '#E10600')
+      }
+    }
   }
 })
 
@@ -107,6 +134,7 @@ export function resetPlayer() {
     // if max hp/shield is changed, changed player start
     // hp/shield
     maxHp: 20,
-    shields: [player.shields[0], 0, 1, 1, 0]
+    shields: [player.shields[0], 0, 1, 1, 0, 0],
+    xpGain: 1
   })
 }

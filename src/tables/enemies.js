@@ -7,12 +7,13 @@ import behaviors from './behaviors.js'
   3 - color
   4 - hp
   5 - damage
-  6 - xp
-  7 - behaviors
+  6 - attack speed (frames per attack)
+  7 - xp
+  8 - behaviors
 */
 
 const enemies = [
-  [0, 1, 10, 'red', 10, 5, 1, [behaviors[0], behaviors[1](22)]],
+  [0, 1, 10, 'red', 7, 2, 120, 1, [behaviors[0], behaviors[1](22)]],
   [
     1,
     1,

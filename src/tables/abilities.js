@@ -12,7 +12,8 @@ import { spawnProjectile } from '../entities/projectiles.js'
   3 - priority (higher = applies later)
 */
 
-let numProjectiles = 0
+let numProjectiles = 0,
+  numShields = 0
 
 // add an on hit effect only once
 function addOnce(projectile, ability) {
@@ -114,7 +115,6 @@ const abilities = [
     }
   ],
   // 8
-  // TODO: not working?
   [
     1,
     'Enemies explode into small Projectiles when killed. +3 Projectiles per card',
@@ -125,7 +125,7 @@ const abilities = [
         // don't add explode projectile to the exploding
         // projectile
         let proj = deepCopyArray(projectile)
-        projectile[8].push(entity => {
+        projectile[9].push(entity => {
           let num = weapon[4] + projectile[10],
             angle = degToRad(360 / num),
             i = 0
@@ -159,7 +159,7 @@ const abilities = [
     0,
     'Health +5%',
     (weapon, projectile, player) => {
-      player.hp *= 1.05
+      player.maxHp *= 1.05
     }
   ],
   // 12
@@ -177,7 +177,7 @@ const abilities = [
     1,
     'Health +15%',
     (weapon, projectile, player) => {
-      player.hp *= 1.15
+      player.maxHp *= 1.15
     }
   ],
   // 15
@@ -265,27 +265,78 @@ const abilities = [
     }
   ],
   // 24
-  // TODO: figure out how to give player a one-time shield
-  // boost when they take the ability
   [
     0,
-    'Gain +20 shield. Shields absorb damage and recover slowly after a delay.',
+    'Gain +20 Shield. Shields absorb damage and recover slowly after a delay',
     (weapon, projectile, player) => (player.shields[1] += 20)
   ],
+  // 25
   [
-    1,
-    'Shield recovery delay -20%',
-    (weapon, projectile, player) => (player.shields[2] *= 1.2)
+    0,
+    '+10% of Projectile damage recovered as Shield on hit',
+    (weapon, projectile, player) => {
+      projectile[9].push(
+        () =>
+          (player.shields[0] = min(
+            player.shields[0] + projectile[3] * 0.1,
+            player.shields[1]
+          ))
+      )
+    }
   ],
+  // 26
   [
     1,
-    'Shield recovery speed +20%',
-    (weapon, projectile, player) => (player.shields[3] *= 1.2)
+    'Shield recovery delay -30%',
+    (weapon, projectile, player) => (player.shields[2] *= 1.3)
   ],
+  // 27
   [
     1,
-    'Shields deal +20% of Projectile damage to the attacker',
-    (weapon, projectile, player) => (player.shields[4] += 0.2)
+    'Shield recovery speed +30%',
+    (weapon, projectile, player) => (player.shields[3] *= 1.3)
+  ],
+  // 28
+  [
+    1,
+    'Shield deals +20% of Projectile damage to the attacker',
+    (weapon, projectile, player) =>
+      (player.shields[4] = player.shields[4]
+        ? player.shields[4] * 1.2 - 1
+        : 1.2)
+  ],
+  // 29
+  [
+    2,
+    'Double total amount of Shield',
+    (weapon, projectile, player) => (player.shields[1] *= 2),
+    5 // double after other abilities add shields
+  ],
+  // 30
+  // TODO: need a way to reset global numShields after
+  // removing the ability
+  [
+    2,
+    'Every one minute gain: +20 Shield',
+    (weapon, projectile, player) => {
+      player.shields[5] += 1
+
+      // only add total num shields once
+      if (player.shields[5] === 1) {
+        player.shields[1] += numShields
+      }
+
+      // 1 minute (3600 frames)
+      addContinuousTimer(0, 3600, () => {
+        numShields += player.shields[5]
+      })
+    }
+  ],
+  // 31
+  [
+    1,
+    'Experience +15%',
+    (weapon, projectile, player) => (player.xpGain *= 1.15)
   ]
 ]
 

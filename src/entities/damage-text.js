@@ -9,16 +9,20 @@ export function spawnDamageText(entity, damage, color = 'yellow') {
       text: damage,
       x: entity.x,
       y: entity.y,
-      font: '24px Arial',
+      font: 'bold 24px Arial',
       color,
       strokeColor: 'black',
       storkeSize: 0.5,
       anchor: { x: 0.5, y: 0.5 },
+      dt: 0,
       update() {
-        this.opacity -= 0.025
         this.y -= 2
-        if (this.opacity <= 0) {
-          this.ttl = 0
+
+        if (++this.dt > 30) {
+          this.opacity -= 0.05
+          if (this.opacity <= 0) {
+            this.ttl = 0
+          }
         }
       }
     })

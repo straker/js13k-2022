@@ -25,6 +25,7 @@ import {
   easeInSine,
   easeLinear,
   updateAndGetCollisions,
+  circleCircleCollision,
   fillBar
 } from './utils.js'
 import { updateTimers } from './timer.js'
@@ -172,6 +173,18 @@ let texts = [
         if (collision.type == 1) {
           collision.active = true
         }
+
+        if (
+          collision.type == 0 &&
+          circleCircleCollision(
+            { position: player.position, size: player.width },
+            collision
+          ) &&
+          collision.attackDt > collision.attackSpeed
+        ) {
+          collision.attackDt = 0
+          player.takeDamage(collision.damage, 0, collision, projectile)
+        }
       })
 
       // level up player
@@ -231,3 +244,4 @@ let texts = [
     }
   })
 loop.start()
+window.player = player

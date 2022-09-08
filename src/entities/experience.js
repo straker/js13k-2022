@@ -35,7 +35,7 @@ export function spawnExperience(enemy) {
 
           if (position.distance(player) <= speed) {
             this.ttl = 0
-            player.xp += value
+            player.xp += value * player.xpGain
           }
         }
       }
