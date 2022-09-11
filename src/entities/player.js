@@ -9,6 +9,7 @@ export let player = Sprite({
   y: canvas.height / 2,
   width: 25, // also used as collision size
   height: 35,
+  size: 25,
   color: 'orange',
   anchor: { x: 0.5, y: 0.5 },
   weapon: weaponsTable[1],
@@ -18,6 +19,7 @@ export let player = Sprite({
   xp: 0,
   lvl: 1,
   reqXp: 5,
+  health: 50,
   update() {
     let dx = 0,
       dy = 0,

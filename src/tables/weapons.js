@@ -19,7 +19,10 @@ const weapons = [
   // gauntlets
   [0, 45, projectiles[0], 15, 1, []],
   // pistol
-  [0, 30, projectiles[1], 9, 1, []]
+  [0, 30, projectiles[1], 9, 1, []],
+
+  // enemy weapons
+  [1, 20, projectiles[0], 15, 1, []]
 ]
 
 export function resetWeapon(weapon) {

@@ -21,7 +21,11 @@ import { damageTexts, removeDeadDamageTexts } from './entities/damage-text.js'
 import { resetWeapon } from './tables/weapons.js'
 import { resetProjectile } from './tables/projectiles.js'
 import { addToGrid, clearGrid } from './grid.js'
-import { easeInSine, updateAndGetCollisions } from './utils.js'
+import {
+  circleCircleCollision,
+  easeInSine,
+  updateAndGetCollisions
+} from './utils.js'
 import { updateTimers } from './timer.js'
 import { levelUp } from './level-up.js'
 
@@ -84,11 +88,18 @@ let texts = [
         // use a tween function to slowly increase the number
         // of enemies
         let numEnemies = easeInSine(gameTime, 5, 100, totalGameTime) | 0
-        spawnEnemies(numEnemies, 0)
+        // spawnEnemies(numEnemies, 0)
+        // spawn wraith
+        spawnEnemies(numEnemies, 2)
       }
 
       enemies.map(enemy => {
         enemy.update(player)
+
+        // melee collision
+        if (circleCircleCollision(player, enemy)) {
+          enemy.dealDamage(player)
+        }
 
         if (enemy.hp <= 0) {
           spawnExperience(enemy)
@@ -185,6 +196,11 @@ let texts = [
           }
           loop.pause = false
         })
+      }
+
+      // player dead
+      if (player.health == 0) {
+        console.log('hit player dead')
       }
 
       /////////////////////////////////////////////
