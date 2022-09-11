@@ -1,12 +1,11 @@
 import { degToRad, rotatePoint, Sprite, Vector } from '../libs/kontra.mjs'
 import enemyTable from '../tables/enemies.js'
 import { spawnDamageText } from './damage-text.js'
-
 export let enemiesDead = 0
 export let enemies = []
 
 function spawnEnemy(x, y, id) {
-  let [, speed, size, color, hp, value, behaviors] = enemyTable[id]
+  let [, speed, size, color, hp, value, behaviors, weapon] = enemyTable[id]
   enemies.push(
     Sprite({
       type: 0,
@@ -24,6 +23,8 @@ function spawnEnemy(x, y, id) {
         [0, 0], // shock, duration
         [0, 0] // weaken, duration
       ],
+      // weapons
+      weapon,
       // 23 = ability: increase damage from all sources
       23: 0,
       render() {
@@ -94,6 +95,10 @@ function spawnEnemy(x, y, id) {
         }
         this.hp -= damage
         spawnDamageText(this, damage, color)
+      },
+
+      dealDamage(player) {
+        console.log(--player.health)
       }
     })
   )
