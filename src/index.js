@@ -21,9 +21,20 @@ import { damageTexts, removeDeadDamageTexts } from './entities/damage-text.js'
 import { resetWeapon } from './tables/weapons.js'
 import { resetProjectile } from './tables/projectiles.js'
 import { addToGrid, clearGrid } from './grid.js'
-import { easeInSine, updateAndGetCollisions } from './utils.js'
+import {
+  easeInSine,
+  easeLinear,
+  updateAndGetCollisions,
+  circleCircleCollision,
+  fillBar
+} from './utils.js'
 import { updateTimers } from './timer.js'
 import { levelUp } from './level-up.js'
+
+// TODO: remove
+// output card stats
+import { logAbilityStats } from './tables/abilities.js'
+logAbilityStats()
 
 let texts = [
     // timer
@@ -83,8 +94,9 @@ let texts = [
 
         // use a tween function to slowly increase the number
         // of enemies
-        let numEnemies = easeInSine(gameTime, 5, 100, totalGameTime) | 0
-        spawnEnemies(numEnemies, 0)
+        let numEnemies = easeInSine(gameTime, 5, 100, totalGameTime) | 0,
+          modifier = easeLinear(gameTime, 1, 3, totalGameTime)
+        spawnEnemies(numEnemies, 0, modifier)
       }
 
       enemies.map(enemy => {
@@ -166,7 +178,32 @@ let texts = [
         if (collision.type == 1) {
           collision.active = true
         }
+
+        if (
+          collision.type == 0 &&
+          circleCircleCollision(
+            { position: player.position, size: player.width - 10 },
+            collision
+          ) &&
+          collision.attackDt > collision.attackSpeed
+        ) {
+          collision.attackDt = 0
+          player.takeDamage(collision.damage, 0, collision, projectile)
+        }
       })
+
+      // game over
+      if (player.hp <= 0) {
+        texts.push(Text({
+          text: 'Game Over',
+          font: '36px Arial',
+          color: 'white',
+          x: canvas.width / 2,
+          y: 175,
+          anchor: { x: 0.5, y: 0.5 }
+        }))
+        setTimeout(() => loop.stop())
+      }
 
       // level up player
       if (player.xp >= player.reqXp) {
@@ -200,13 +237,16 @@ let texts = [
       enemies.map(enemy => enemy.render())
 
       // experience bar
-      context.strokeStyle = 'white'
-      context.fillStyle = '#60AC53'
-      context.lineWidth = 3
-      let width = canvas.width - 20,
-        fill = player.xp / player.reqXp
-      context.strokeRect(10, 10, width, 25)
-      context.fillRect(13, 13, (width - 6) * fill, 19)
+      fillBar(
+        10,
+        10,
+        canvas.width - 20,
+        25,
+        3,
+        '#60AC53',
+        player.xp,
+        player.reqXp
+      )
 
       texts.map(text => text.render())
       damageTexts.map(text => text.render())
@@ -222,3 +262,4 @@ let texts = [
     }
   })
 loop.start()
+window.player = player

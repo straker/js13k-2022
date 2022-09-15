@@ -16,7 +16,8 @@ esbuild.build({
         group: true
       },
       text: {
-        autoNewline: true
+        autoNewline: true,
+        newline: true
       },
       vector: {
         angle: true,

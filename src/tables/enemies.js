@@ -6,13 +6,24 @@ import behaviors from './behaviors.js'
   2 - size (radius)
   3 - color
   4 - hp
-  5 - xp
-  6 - behaviors
+  5 - damage
+  6 - attack speed (frames per attack)
+  7 - xp
+  8 - behaviors
 */
 
 const enemies = [
-  [0, 1, 10, 'red', 10, 1, [behaviors[0], behaviors[1](22)]],
-  [1, 1, 10, 'yellow', 10, 5, [behaviors[0], behaviors[1](22), behaviors[2](150)]]
+  [0, 0.75, 10, 'red', 7, 2, 120, 1, [behaviors[0], behaviors[1](22)]],
+  [
+    1,
+    1,
+    10,
+    'yellow',
+    10,
+    10,
+    5,
+    [behaviors[0], behaviors[1](22), behaviors[2](150)]
+  ]
 ]
 
 export default enemies

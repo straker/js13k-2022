@@ -51,19 +51,12 @@ export function levelUp(cb) {
 function getAbilities(cb) {
   for (let i = 0; i < 3; i++) {
     let rand = random() * 100,
-      x = canvas.width / 2 - 200 + 200 * i,
+      x = canvas.width / 2 - 215 + 215 * i,
       y = canvas.height / 2,
       rarity,
       availableAbilities,
       ability
-    if (rand <= rarePercent) {
-      rarity = 2
-      commonPercent = statCommonPercent
-      uncommonPercent = startUncommonPercent
-      rarePercent = startRarePercent
-    } else if (rand <= rarePercent + uncommonPercent) {
-      rarity = 1
-    } else {
+    if (rand <= commonPercent) {
       rarity = 0
       rarePercent++
       if (commonPercent) {
@@ -71,6 +64,13 @@ function getAbilities(cb) {
       } else {
         uncommonPercent--
       }
+    } else if (rand <= commonPercent + uncommonPercent) {
+      rarity = 1
+    } else {
+      rarity = 2
+      commonPercent = statCommonPercent
+      uncommonPercent = startUncommonPercent
+      rarePercent = startRarePercent
     }
 
     availableAbilities = abilityTable.filter(ability => ability[0] == rarity)

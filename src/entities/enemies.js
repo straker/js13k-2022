@@ -5,8 +5,9 @@ import { spawnDamageText } from './damage-text.js'
 export let enemiesDead = 0
 export let enemies = []
 
-function spawnEnemy(x, y, id) {
-  let [, speed, size, color, hp, value, behaviors] = enemyTable[id]
+function spawnEnemy(x, y, id, modifier) {
+  let [, speed, size, color, hp, damage, attackSpeed, value, behaviors] =
+    enemyTable[id]
   enemies.push(
     Sprite({
       type: 0,
@@ -14,8 +15,11 @@ function spawnEnemy(x, y, id) {
       y,
       color,
       size,
-      speed,
-      hp,
+      speed: speed * max(modifier / 2, 1),
+      hp: round(hp * modifier),
+      damage: round(damage * modifier),
+      attackSpeed: round(attackSpeed * modifier),
+      attackDt: 0,
       value,
       behaviors,
       status: [
@@ -38,6 +42,8 @@ function spawnEnemy(x, y, id) {
           velocityVector = velocity,
           maxSpeed = speed - speed * status[0][0],
           angle = degToRad(5)
+
+        this.attackDt++
 
         // apply poison every 60 frames
         if (status[1][0] && status[1][1] % 60 == 0) {
@@ -82,16 +88,17 @@ function spawnEnemy(x, y, id) {
       takeDamage(damage, type, color) {
         // shock status
         if (this.status[2][1] && type == 0) {
-          damage = damage + round(damage * this.status[2][0])
+          damage += damage * this.status[2][0]
         }
 
         // ability: increase damage from all sources
         for (let i = 0; i < 4; i++) {
           if (this.status[i][1]) {
-            damage = damage + round(damage * this[23])
+            damage += damage * this[23]
             break
           }
         }
+        damage = round(damage)
         this.hp -= damage
         spawnDamageText(this, damage, color)
       }
@@ -99,14 +106,14 @@ function spawnEnemy(x, y, id) {
   )
 }
 
-export function spawnEnemies(num, id) {
+export function spawnEnemies(num, id, modifier) {
   for (let i = num; i--; ) {
     let angle = degToRad(random() * 360)
     let { x, y } = rotatePoint(
       { x: canvas.width / 2, y: canvas.height / 2 },
       angle
     )
-    spawnEnemy(x + canvas.width / 2, y + canvas.height / 2, id)
+    spawnEnemy(x + canvas.width / 2, y + canvas.height / 2, id, modifier)
   }
 }
 

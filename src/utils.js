@@ -20,6 +20,11 @@ export function easeInSine(t, b, _c, d) {
   return -c * Math.cos((t / d) * (Math.PI / 2)) + c + b
 }
 
+export function easeLinear(t, b, _c, d) {
+  var c = _c - b
+  return (c * t) / d + b
+}
+
 export function deepCopyArray(array) {
   return array.map(item => {
     if (Array.isArray(item)) {
@@ -72,4 +77,17 @@ export function updateAndGetCollisions(obj, types) {
 
 export function removeDead(array) {
   return array.filter(item => item.isAlive())
+}
+
+export function fillBar(x, y, width, height, lineWidth, color, current, total) {
+  context.strokeStyle = 'white'
+  context.fillStyle = color
+  context.lineWidth = lineWidth
+  context.strokeRect(x, y, width, height)
+  context.fillRect(
+    x + lineWidth,
+    y + lineWidth,
+    (width - lineWidth * 2) * (current / total),
+    height - lineWidth * 2
+  )
 }
