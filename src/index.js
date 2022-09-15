@@ -31,6 +31,11 @@ import {
 import { updateTimers } from './timer.js'
 import { levelUp } from './level-up.js'
 
+// TODO: remove
+// output card stats
+import { logAbilityStats } from './tables/abilities.js'
+logAbilityStats()
+
 let texts = [
     // timer
     Text({
@@ -90,7 +95,7 @@ let texts = [
         // use a tween function to slowly increase the number
         // of enemies
         let numEnemies = easeInSine(gameTime, 5, 100, totalGameTime) | 0,
-          modifier = easeLinear(gameTime, 1, 5, totalGameTime)
+          modifier = easeLinear(gameTime, 1, 3, totalGameTime)
         spawnEnemies(numEnemies, 0, modifier)
       }
 
@@ -177,7 +182,7 @@ let texts = [
         if (
           collision.type == 0 &&
           circleCircleCollision(
-            { position: player.position, size: player.width },
+            { position: player.position, size: player.width - 10 },
             collision
           ) &&
           collision.attackDt > collision.attackSpeed
@@ -186,6 +191,19 @@ let texts = [
           player.takeDamage(collision.damage, 0, collision, projectile)
         }
       })
+
+      // game over
+      if (player.hp <= 0) {
+        texts.push(Text({
+          text: 'Game Over',
+          font: '36px Arial',
+          color: 'white',
+          x: canvas.width / 2,
+          y: 175,
+          anchor: { x: 0.5, y: 0.5 }
+        }))
+        setTimeout(() => loop.stop())
+      }
 
       // level up player
       if (player.xp >= player.reqXp) {

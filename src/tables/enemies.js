@@ -13,7 +13,7 @@ import behaviors from './behaviors.js'
 */
 
 const enemies = [
-  [0, 1, 10, 'red', 7, 2, 120, 1, [behaviors[0], behaviors[1](22)]],
+  [0, 0.75, 10, 'red', 7, 2, 120, 1, [behaviors[0], behaviors[1](22)]],
   [
     1,
     1,

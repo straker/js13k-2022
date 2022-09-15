@@ -5,6 +5,7 @@
     - keyPressed accept array of keys
     - normalize zero vector
     - stroke text
+    - Text auto newline and newline character at same time
 */
 let noop = () => {};
 
@@ -2700,7 +2701,7 @@ class Text extends GameObject {
 
     // @ifdef TEXT_AUTONEWLINE
     if (!this._s.length && this._fw) {
-      let parts = this.text.split(' ');
+      let parts = this.text.split(/ |(\n)/).filter(item => !!item)
       let start = 0;
       let i = 2;
 
@@ -2708,6 +2709,16 @@ class Text extends GameObject {
       // width
       for (; i <= parts.length; i++) {
         let str = parts.slice(start, i).join(' ');
+
+        if (str.includes('\n')) {
+          let newlineParts = str.split('\n');
+          for (let j = 0; j < newlineParts.length - 1; j++) {
+            this._s.push(newlineParts[j])
+          }
+          str = newlineParts[newlineParts.length - 1]
+          start = i
+        }
+
         let width = context.measureText(str).width;
 
         if (width > this._fw) {

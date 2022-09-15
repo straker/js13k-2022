@@ -1,6 +1,5 @@
 import { keyPressed, Sprite } from '../libs/kontra.mjs'
 import weaponsTable from '../tables/weapons.js'
-import abilityTable from '../tables/abilities.js'
 import { getAngle, fillBar } from '../utils.js'
 import { spawnWeaponProjectiles } from './projectiles.js'
 import { spawnDamageText } from './damage-text.js'
@@ -15,7 +14,7 @@ export let player = Sprite({
   weapon: weaponsTable[1],
   dt: 99, // high so first attack happens right away
   facingRot: 0,
-  abilities: [abilityTable[31]],
+  abilities: [],
   xp: 0,
   lvl: 1,
   reqXp: 5,
@@ -97,12 +96,15 @@ export let player = Sprite({
     weapon[5].map(effect => effect(this))
   },
   takeDamage(damage, type, entity, projectile) {
-    // reset shield delay timer when hit
-    this.shieldDt = 0
     damage = round(damage)
     let { x, y, shields } = this,
       curShields = round(shields[0]),
       diff = damage - curShields
+
+    // reset shield delay timer when hit
+    if (shields[1]) {
+      this.shieldDt = 0
+    }
 
     // shield spike damage
     if (shields[0] && shields[4]) {
@@ -124,8 +126,12 @@ export let player = Sprite({
         spawnDamageText(this, diff, '#E10600')
       }
     }
+
+    this.hp = max(this.hp, 0)
   }
 })
+
+player.position.clamp(player.width/2,player.height/2,canvas.width-player.width/2,canvas.height-player.height/2)
 
 export function resetPlayer() {
   Object.assign(player, {

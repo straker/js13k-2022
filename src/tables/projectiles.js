@@ -55,7 +55,7 @@ const projectiles = [
     1,
     15,
     12,
-    5,
+    6,
     25,
     1,
     function () {
