@@ -1,12 +1,12 @@
-export let gridSize = 100
+export const gridSize = 100;
 
-let grid = [],
-  maxRow = (canvas.height / gridSize) | 0,
-  maxCol = (canvas.width / gridSize) | 0
-clearGrid()
+const grid = [];
+const maxRow = (canvas.height / gridSize) | 0;
+const maxCol = (canvas.width / gridSize) | 0;
+clearGrid();
 
 function getPos(obj) {
-  let { x, y, size } = obj
+  const { x, y, size } = obj;
 
   // row, endRow, col, endCol
   return [
@@ -14,42 +14,44 @@ function getPos(obj) {
     ((y + size) / gridSize) | 0,
     ((x - size) / gridSize) | 0,
     ((x + size) / gridSize) | 0
-  ]
+  ];
 }
 
 export function addToGrid(obj) {
-  let [row, endRow, col, endCol] = getPos(obj)
+  const [row, endRow, col, endCol] = getPos(obj);
 
   // only add objects that are on screen
   for (let r = row; r >= 0 && r <= endRow && r <= maxRow; r++) {
     for (let c = col; c >= 0 && c <= endCol && c <= maxCol; c++) {
-      grid[r][c].push(obj)
+      grid[r][c].push(obj);
     }
   }
 }
 
 export function getFromGrid(obj, types) {
-  types = Array.isArray(types) ? types : [types]
-  let [row, endRow, col, endCol] = getPos(obj),
-    objects = []
+  types = Array.isArray(types) ? types : [types];
+
+  const [row, endRow, col, endCol] = getPos(obj);
+  const objects = [];
+
   for (let r = row; r >= 0 && r <= endRow && r <= maxRow; r++) {
     for (let c = col; c >= 0 && c <= endCol && c <= maxCol; c++) {
       grid[r][c].map(item => {
         if (!objects.includes(item) && types.includes(item.type)) {
-          objects.push(item)
+          objects.push(item);
         }
-      })
+      });
     }
   }
 
-  return objects
+  return objects;
 }
 
 export function clearGrid() {
   for (let r = 0; r <= maxRow; r++) {
-    grid[r] = []
+    grid[r] = [];
     for (let c = 0; c <= maxCol; c++) {
-      grid[r][c] = []
+      grid[r][c] = [];
     }
   }
 }
