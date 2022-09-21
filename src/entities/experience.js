@@ -19,7 +19,7 @@ export function spawnExperience(enemy) {
         const { size, context } = this;
         context.beginPath();
         context.fillStyle = '#60AC53';
-        context.arc(0, 0, size, 0, PI * 2);
+        context.arc(0, 0, size, 0, Math.PI * 2);
         context.fill();
       },
       update(player) {

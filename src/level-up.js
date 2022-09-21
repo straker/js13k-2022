@@ -1,4 +1,11 @@
-import { randInt, GameLoop, Button, Text } from './libs/kontra.mjs';
+import {
+  getCanvas,
+  getContext,
+  randInt,
+  GameLoop,
+  Button,
+  Text
+} from './libs/kontra.mjs';
 import abilityTable from './tables/abilities.js';
 import { spawnCard } from './entities/card.js';
 
@@ -14,6 +21,9 @@ let texts = [];
 const loop = GameLoop({
   clearCanvas: false,
   render() {
+    const canvas = getCanvas();
+    const context = getContext();
+
     context.save();
     context.globalAlpha = 0.75;
     context.fillStyle = '#333';
@@ -26,14 +36,17 @@ const loop = GameLoop({
 });
 
 export function levelUp(cb) {
+  const canvas = getCanvas();
   abilities = [];
   texts = [];
+
   getAbilities(ability => {
     loop.stop();
     abilities.map(ability => ability.destroy());
     abilities = [];
     cb(ability);
   });
+
   texts.push(
     Text({
       x: canvas.width / 2,
@@ -44,12 +57,16 @@ export function levelUp(cb) {
       anchor: { x: 0.5, y: 0.5 }
     })
   );
+
   loop.start();
 }
 
 function getAbilities(cb) {
+  const canvas = getCanvas();
+  const context = getContext();
+
   for (let i = 0; i < 3; i++) {
-    const rand = random() * 100;
+    const rand = Math.random() * 100;
     const x = canvas.width / 2 - 215 + 215 * i;
     const y = canvas.height / 2;
     let rarity, availableAbilities, ability;

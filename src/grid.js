@@ -1,9 +1,15 @@
+import { getCanvas } from './libs/kontra.mjs';
+
 export const gridSize = 100;
 
 const grid = [];
-const maxRow = (canvas.height / gridSize) | 0;
-const maxCol = (canvas.width / gridSize) | 0;
-clearGrid();
+
+function getMaxSize() {
+  const canvas = getCanvas();
+
+  // maxRow, maxCol
+  return [(canvas.height / gridSize) | 0, (canvas.width / gridSize) | 0];
+}
 
 function getPos(obj) {
   const { x, y, size } = obj;
@@ -18,6 +24,7 @@ function getPos(obj) {
 }
 
 export function addToGrid(obj) {
+  const [maxRow, maxCol] = getMaxSize();
   const [row, endRow, col, endCol] = getPos(obj);
 
   // only add objects that are on screen
@@ -31,6 +38,7 @@ export function addToGrid(obj) {
 export function getFromGrid(obj, types) {
   types = Array.isArray(types) ? types : [types];
 
+  const [maxRow, maxCol] = getMaxSize();
   const [row, endRow, col, endCol] = getPos(obj);
   const objects = [];
 
@@ -48,6 +56,8 @@ export function getFromGrid(obj, types) {
 }
 
 export function clearGrid() {
+  const [maxRow, maxCol] = getMaxSize();
+
   for (let r = 0; r <= maxRow; r++) {
     grid[r] = [];
     for (let c = 0; c <= maxCol; c++) {

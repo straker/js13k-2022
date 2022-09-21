@@ -38,7 +38,9 @@ const behaviors = {
   // @see https://gamedevelopment.tutsplus.com/tutorials/understanding-steering-behaviors-seek--gamedev-849
   seekPlayer(enemy, player) {
     const angle = angleToTarget(enemy, player);
-    return Vector(sin(angle), -cos(angle)).subtract(enemy.velocity).scale(0.9);
+    return Vector(Math.sin(angle), -Math.cos(angle))
+      .subtract(enemy.velocity)
+      .scale(0.9);
   },
   avoidEnemies(distance) {
     return enemy => avoidance(enemy, getFromGrid(enemy, 0), distance);

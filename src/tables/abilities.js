@@ -2,6 +2,7 @@ import { degToRad } from '../libs/kontra.mjs';
 import { addTimer, addContinuousTimer } from '../timer.js';
 import { deepCloneObject } from '../utils.js';
 import { spawnProjectile } from '../entities/projectiles.js';
+import { rarity } from '../constants.js';
 
 let numProjectiles = 0;
 let numShields = 0;
@@ -46,7 +47,7 @@ function addIncreaseDamage(projectile) {
 /*
   all abilities take same parameters: weapon, projectile
 */
-let abilities = [
+const abilities = [
   // TODO: needs improvement to attack all enemies that you
   // pass through. should also use a tween and lock player
   // movement until the tween is done
@@ -63,17 +64,17 @@ let abilities = [
   // ],
   // 0
   {
-    rarity: 0,
-    text: '+1 Projectile\nProjectile Damage -2\nSpread +5',
+    rarity: rarity.common,
+    text: '+1 Projectile\nProjectile Damage -1\nSpread +5',
     effect(weapon, projectile) {
       weapon.numProjectiles++;
-      projectile.damage = Math.max(projectile.damage - 2, 1);
+      projectile.damage = Math.max(projectile.damage - 1, 1);
       weapon.spread += 5;
     }
   },
   // 1
   {
-    rarity: 0,
+    rarity: rarity.common,
     text: 'Projectile Damage +2\nProjectile Size +3',
     effect(weapon, projectile) {
       projectile.damage += 2;
@@ -82,7 +83,7 @@ let abilities = [
   },
   // 2
   {
-    rarity: 0,
+    rarity: rarity.common,
     text: 'Projectile Damage +4',
     effect(weapon, projectile) {
       projectile.damage += 4;
@@ -90,7 +91,7 @@ let abilities = [
   },
   // 3
   {
-    rarity: 0,
+    rarity: rarity.common,
     text: 'Projectile Damage +7\nProjectile Size -1',
     effect(weapon, projectile) {
       projectile.damage += 7;
@@ -99,7 +100,7 @@ let abilities = [
   },
   // 4
   {
-    rarity: 1,
+    rarity: rarity.uncommon,
     text: 'Projectile Pierce +1',
     effect(weapon, projectile) {
       projectile.pierce++;
@@ -107,7 +108,7 @@ let abilities = [
   },
   // 5
   {
-    rarity: 2,
+    rarity: rarity.rare,
     text: 'Repeat attack after a short delay',
     effect(weapon, projectile, player) {
       // don't add the repeat attack on to the repeated attack
@@ -123,7 +124,7 @@ let abilities = [
   },
   // 6
   {
-    rarity: 2,
+    rarity: rarity.rare,
     text: 'Double total number of Projectiles',
     effect(weapon) {
       weapon.numProjectiles *= 2;
@@ -134,7 +135,7 @@ let abilities = [
   // removing the ability
   // 7
   {
-    rarity: 2,
+    rarity: rarity.rare,
     text: 'Every one minute gain: +1 Projectile',
     effect(weapon) {
       weapon.numProjectilesPerMinute += 1;
@@ -152,7 +153,7 @@ let abilities = [
   },
   // 8
   {
-    rarity: 1,
+    rarity: rarity.uncommon,
     text: 'Enemies explode into small Projectiles when killed. +3 Projectiles per card',
     effect(weapon, projectile) {
       projectile.numProjectilesOnExplosion += 3;
@@ -168,10 +169,10 @@ let abilities = [
 
           // reduce stats
           proj.speed = 5;
-          proj.size = max(proj.size * 0.25, 8);
-          proj.damage = max(round(proj.damage * 0.25), 1);
+          proj.size = Math.max(proj.size * 0.25, 8);
+          proj.damage = Math.max(Math.round(proj.damage * 0.25), 1);
           proj.ttl = 10;
-          proj.pierce = max(proj.pierce * 0.25, 1);
+          proj.pierce = Math.max(proj.pierce * 0.25, 1);
 
           for (let i = 0; i < num; i++) {
             spawnProjectile(proj, entity, angle * i);
@@ -183,7 +184,7 @@ let abilities = [
   },
   // 9
   {
-    rarity: 0,
+    rarity: rarity.common,
     text: 'Attack Speed +5%',
     effect(weapon) {
       weapon.attackSpeed -= weapon.attackSpeed * 0.05;
@@ -191,7 +192,7 @@ let abilities = [
   },
   // 10
   {
-    rarity: 0,
+    rarity: rarity.common,
     text: 'Move Speed +5%',
     effect(weapon, projectile, player) {
       player.speed *= 1.05;
@@ -199,7 +200,7 @@ let abilities = [
   },
   // 11
   {
-    rarity: 0,
+    rarity: rarity.common,
     text: 'Health +5%',
     effect(weapon, projectile, player) {
       player.maxHp *= 1.05;
@@ -207,7 +208,7 @@ let abilities = [
   },
   // 12
   {
-    rarity: 1,
+    rarity: rarity.uncommon,
     text: 'Attack Speed +15%',
     effect(weapon) {
       weapon.attackSpeed -= weapon.attackSpeed * 0.15;
@@ -215,7 +216,7 @@ let abilities = [
   },
   // 13
   {
-    rarity: 1,
+    rarity: rarity.uncommon,
     text: 'Move Speed +15%',
     effect(weapon, projectile, player) {
       player.speed *= 1.15;
@@ -223,7 +224,7 @@ let abilities = [
   },
   // 14
   {
-    rarity: 1,
+    rarity: rarity.uncommon,
     text: 'Health +15%',
     effect(weapon, projectile, player) {
       player.maxHp *= 1.15;
@@ -231,7 +232,7 @@ let abilities = [
   },
   // 15
   {
-    rarity: 0,
+    rarity: rarity.common,
     text: 'Pickup Distance +20%',
     effect(weapon, projectile, player) {
       player.size *= 1.2;
@@ -239,7 +240,7 @@ let abilities = [
   },
   // 16
   {
-    rarity: 0,
+    rarity: rarity.common,
     text: '+20% to apply Chill status on hit (slows enemy movement)',
     effect(weapon, projectile) {
       projectile.statusEffects.chill += 0.2;
@@ -249,7 +250,7 @@ let abilities = [
   },
   // 17
   {
-    rarity: 0,
+    rarity: rarity.common,
     text: '+20% to apply Poison status on hit (damage over time)',
     effect(weapon, projectile) {
       projectile.statusEffects.poison += 0.2;
@@ -259,7 +260,7 @@ let abilities = [
   },
   // 18
   {
-    rarity: 0,
+    rarity: rarity.common,
     text: '+20% to apply Shock status on hit (increases damage taken from Projectiles)',
     effect(weapon, projectile) {
       projectile.statusEffects.shock += 0.2;
@@ -270,7 +271,7 @@ let abilities = [
   // TODO: implement
   // 19
   {
-    rarity: 0,
+    rarity: rarity.common,
     text: '+20% to apply Weaken status on hit (reduces damage dealt)',
     effect(weapon, projectile) {
       projectile.statusEffects.weaken += 0.2;
@@ -280,7 +281,7 @@ let abilities = [
   },
   // 20
   {
-    rarity: 1,
+    rarity: rarity.uncommon,
     text: 'Status chance +10%',
     effect(weapon, projectile) {
       ['chill', 'poison', 'shock', 'weaken'].map(status => {
@@ -294,7 +295,7 @@ let abilities = [
   },
   // 21
   {
-    rarity: 1,
+    rarity: rarity.uncommon,
     text: 'Status duration +2 seconds',
     effect(weapon, projectile) {
       projectile.statusEffects.duration += 120;
@@ -302,7 +303,7 @@ let abilities = [
   },
   // 22
   {
-    rarity: 1,
+    rarity: rarity.uncommon,
     text: 'Status effectiveness +20%',
     effect(weapon, projectile) {
       projectile.statusEffects.effectivness += 0.2;
@@ -310,7 +311,7 @@ let abilities = [
   },
   // 23
   {
-    rarity: 2,
+    rarity: rarity.rare,
     text: 'Enemies with a status effect take +20% damage from all sources',
     effect(weapon, projectile) {
       projectile.damageToEnemiesWithStats += 0.2;
@@ -319,7 +320,7 @@ let abilities = [
   },
   // 24
   {
-    rarity: 0,
+    rarity: rarity.common,
     text: 'Gain +20 Shield. Shields absorb damage and recover slowly after a delay',
     effect(weapon, projectile, player) {
       player.shields.max += 20;
@@ -327,7 +328,7 @@ let abilities = [
   },
   // 25
   {
-    rarity: 0,
+    rarity: rarity.common,
     text: 'Recover Shield on hit up to +10% of Projectile damage',
     effect(weapon, projectile, player) {
       projectile.onHitEffects.push(
@@ -341,7 +342,7 @@ let abilities = [
   },
   // 26
   {
-    rarity: 1,
+    rarity: rarity.uncommon,
     text: 'Shield recovery delay -30%',
     effect(weapon, projectile, player) {
       player.shields.recoveryDelay *= 1.3;
@@ -349,7 +350,7 @@ let abilities = [
   },
   // 27
   {
-    rarity: 1,
+    rarity: rarity.uncommon,
     text: 'Shield recovery speed +30%',
     effect(weapon, projectile, player) {
       player.shields.recoverySpeed *= 1.3;
@@ -357,7 +358,7 @@ let abilities = [
   },
   // 28
   {
-    rarity: 1,
+    rarity: rarity.uncommon,
     text: 'Shield deals +20% of Projectile damage to the attacker',
     effect(weapon, projectile, player) {
       player.shields.spikeDamagePercent = player.shields.spikeDamagePercent
@@ -367,7 +368,7 @@ let abilities = [
   },
   // 29
   {
-    rarity: 2,
+    rarity: rarity.rare,
     text: 'Double total amount of Shield',
     effect(weapon, projectile, player) {
       player.shields.max *= 2;
@@ -378,7 +379,7 @@ let abilities = [
   // removing the ability
   // 30
   {
-    rarity: 2,
+    rarity: rarity.rare,
     text: 'Every one minute gain: +20 Shield',
     effect(weapon, projectile, player) {
       player.shields.numShieldsPerMinute += 1;
@@ -396,7 +397,7 @@ let abilities = [
   },
   // 31
   {
-    rarity: 1,
+    rarity: rarity.uncommon,
     text: 'Experience +15%',
     effect(weapon, projectile, player) {
       player.xpGain *= 1.15;
@@ -404,7 +405,7 @@ let abilities = [
   },
   // 32
   {
-    rarity: 1,
+    rarity: rarity.uncommon,
     text: 'Projectile Damage +10\nAttack Speed -10%',
     effect(weapon, projectile) {
       projectile.damage += 10;

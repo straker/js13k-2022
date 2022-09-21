@@ -1,4 +1,10 @@
-import { degToRad, rotatePoint, Sprite, Vector } from '../libs/kontra.mjs';
+import {
+  getCanvas,
+  degToRad,
+  rotatePoint,
+  Sprite,
+  Vector
+} from '../libs/kontra.mjs';
 import enemyTable from '../tables/enemies.js';
 import { spawnDamageText } from './damage-text.js';
 
@@ -16,10 +22,10 @@ function spawnEnemy(x, y, name, modifier) {
       y,
       color,
       size,
-      speed: speed * max(modifier / 2, 1),
-      hp: round(hp * modifier),
-      damage: round(damage * modifier),
-      attackSpeed: round(attackSpeed * modifier),
+      speed: speed * Math.max(modifier / 2, 1),
+      hp: Math.round(hp * modifier),
+      damage: Math.round(damage * modifier),
+      attackSpeed: Math.round(attackSpeed * modifier),
       attackDt: 0,
       value,
       behaviors,
@@ -31,10 +37,11 @@ function spawnEnemy(x, y, name, modifier) {
       },
       damageFromAllSources: 0,
       render() {
-        const { size, color } = this;
+        const { size, color, context } = this;
+
         context.beginPath();
         context.fillStyle = color;
-        context.arc(0, 0, size, 0, PI * 2);
+        context.arc(0, 0, size, 0, Math.PI * 2);
         context.fill();
       },
       update(player) {
@@ -99,7 +106,7 @@ function spawnEnemy(x, y, name, modifier) {
         //     break;
         //   }
         // }
-        damage = round(damage);
+        damage = Math.round(damage);
         this.hp -= damage;
         spawnDamageText(this, damage, color);
       }
@@ -108,8 +115,10 @@ function spawnEnemy(x, y, name, modifier) {
 }
 
 export function spawnEnemies(num, id, modifier) {
+  const canvas = getCanvas();
+
   for (let i = num; i--; ) {
-    const angle = degToRad(random() * 360);
+    const angle = degToRad(Math.random() * 360);
     const { x, y } = rotatePoint(
       { x: canvas.width / 2, y: canvas.height / 2 },
       angle

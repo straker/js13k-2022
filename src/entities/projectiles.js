@@ -17,12 +17,12 @@ export function spawnProjectile(
       // a projectile can only hit each enemy once during
       // its lifetime
       hit: [],
-      x: pos.x + padding.x * sin(angle),
-      y: pos.y + padding.y * -cos(angle),
+      x: pos.x + padding.x * Math.sin(angle),
+      y: pos.y + padding.y * -Math.cos(angle),
       rotation: angle,
       anchor: { x: 0.5, y: 0.5 },
-      dx: speed * sin(angle),
-      dy: speed * -cos(angle)
+      dx: speed * Math.sin(angle),
+      dy: speed * -Math.cos(angle)
     })
   );
 }

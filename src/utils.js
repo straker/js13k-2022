@@ -1,4 +1,4 @@
-import { movePoint } from './libs/kontra.mjs';
+import { getContext, movePoint } from './libs/kontra.mjs';
 import { getFromGrid } from './grid.js';
 
 export function getAngle(x, y) {
@@ -6,7 +6,7 @@ export function getAngle(x, y) {
     y = x.y;
     x = x.x;
   }
-  return atan2(y, x) + PI / 2;
+  return Math.atan2(y, x) + Math.PI / 2;
 }
 
 export function circleCircleCollision(circle1, circle2) {
@@ -58,7 +58,7 @@ export function updateAndGetCollisions(obj, types) {
     const { x, y } = movePoint(
       obj,
       getAngle(obj.velocity),
-      min(moveDistance, fixedStep)
+      Math.min(moveDistance, fixedStep)
     );
 
     obj.x = x;
@@ -90,6 +90,8 @@ export function removeDead(array) {
 }
 
 export function fillBar(x, y, width, height, lineWidth, color, current, total) {
+  const context = getContext();
+
   context.strokeStyle = 'white';
   context.fillStyle = color;
   context.lineWidth = lineWidth;

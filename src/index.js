@@ -1,10 +1,9 @@
-import { keyPressed, GameLoop, Text } from './libs/kontra.mjs';
+import { getCanvas, keyPressed, GameLoop, Text } from './libs/kontra.mjs';
 
 // call first so canvas will exist in all other files
 import './init.js';
-import './globals.js';
 
-import { player, resetPlayer } from './entities/player.js';
+import { spawnPlayer, resetPlayer } from './entities/player.js';
 import { projectiles, removeDeadProjectiles } from './entities/projectiles.js';
 import {
   enemies,
@@ -36,6 +35,8 @@ import { levelUp } from './level-up.js';
 import { logAbilityStats } from './tables/abilities.js';
 logAbilityStats();
 
+const canvas = getCanvas();
+
 let texts = [
   // timer
   Text({
@@ -66,6 +67,8 @@ let texts = [
     strokeWidth: 4
   })
 ];
+
+const player = spawnPlayer();
 const totalGameTime = 60 * 10; // 10 minutes (600 seconds)
 let gameTime = 0;
 let spawnDt = 99; // high so first wave happens right away

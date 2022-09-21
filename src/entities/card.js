@@ -24,6 +24,8 @@ export function spawnCard(x, y, ability, cb) {
       cb && cb(ability);
     },
     render() {
+      const { context } = this;
+
       this.draw();
 
       context.fillStyle = 'white';
