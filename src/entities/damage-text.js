@@ -32,3 +32,8 @@ export function spawnDamageText(entity, damage, color = 'yellow') {
 export function removeDeadDamageTexts() {
   damageTexts = removeDead(damageTexts);
 }
+
+// expose for testing
+export function _clear() {
+  damageTexts = [];
+}

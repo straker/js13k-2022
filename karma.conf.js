@@ -3,11 +3,8 @@ module.exports = function (config) {
     basePath: '',
     singleRun: false,
     autoWatch: true,
-    frameworks: ['mocha', 'chai'],
+    frameworks: ['mocha', 'chai', 'sinon'],
     files: [
-      // setup
-      { pattern: 'test/setup.js' },
-
       // src files
       {
         pattern: 'node_modules/zod/lib/index.mjs',
@@ -18,7 +15,7 @@ module.exports = function (config) {
       { pattern: 'src/**/*.js', type: 'module', included: false },
 
       // test files
-      { pattern: 'test/schemas.js', type: 'module' },
+      { pattern: 'test/*.js', type: 'module' },
       { pattern: 'test/**/*.spec.js', type: 'module' }
     ],
     browsers: ['ChromeHeadless'],

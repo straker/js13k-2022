@@ -28,7 +28,8 @@ module.exports = {
         mocha: true
       },
       globals: {
-        assert: true
+        assert: true,
+        sinon: true
       }
     }
   ]

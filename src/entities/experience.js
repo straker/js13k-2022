@@ -47,3 +47,8 @@ export function spawnExperience(enemy) {
 export function removeDeadExperience() {
   experiences = removeDead(experiences);
 }
+
+// expose for testing
+export function _clear() {
+  experiences = [];
+}

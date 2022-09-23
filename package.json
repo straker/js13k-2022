@@ -41,7 +41,9 @@
     "karma-chrome-launcher": "^3.1.1",
     "karma-mocha": "^2.0.1",
     "karma-mocha-reporter": "^2.2.5",
+    "karma-sinon": "^1.0.5",
     "mocha": "^10.0.0",
+    "sinon": "^14.0.0",
     "zod": "^3.19.1"
   }
 }

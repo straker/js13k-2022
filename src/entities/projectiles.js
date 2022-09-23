@@ -41,3 +41,8 @@ export function spawnWeaponProjectiles(projectile, player, weapon) {
 export function removeDeadProjectiles() {
   projectiles = removeDead(projectiles);
 }
+
+// expose for testing
+export function _clear() {
+  projectiles = [];
+}
