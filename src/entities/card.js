@@ -1,5 +1,5 @@
 import { Button } from '../libs/kontra.mjs';
-import { rarity } from '../constants.js';
+import { types } from '../constants.js';
 
 export function spawnCard(x, y, ability, cb) {
   const { rarity: abilityRarity, text } = ability;
@@ -12,9 +12,9 @@ export function spawnCard(x, y, ability, cb) {
     height: 250,
     rarity: abilityRarity,
     color:
-      abilityRarity == rarity.common
+      abilityRarity == types.common
         ? 'lightgrey'
-        : abilityRarity == rarity.uncommon
+        : abilityRarity == types.uncommon
         ? 'lightblue'
         : 'gold',
     text: {

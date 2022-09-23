@@ -1,12 +1,12 @@
 import { ButtonClass } from '../../src/libs/kontra.mjs';
-import { rarity } from '../../src/constants.js';
+import { types } from '../../src/constants.js';
 import { spawnCard } from '../../src/entities/card.js';
 
 describe('entities/card', () => {
   describe('spawnCard', () => {
     it('should spawn card', () => {
       const card = spawnCard(10, 5, {
-        rarity: rarity.common,
+        rarity: types.common,
         text: 'Do damage'
       });
 
@@ -15,7 +15,7 @@ describe('entities/card', () => {
 
     it('should spawn card at position', () => {
       const card = spawnCard(10, 5, {
-        rarity: rarity.uncommon,
+        rarity: types.uncommon,
         text: 'Do damage'
       });
 
@@ -25,16 +25,16 @@ describe('entities/card', () => {
 
     it('should set rarity', () => {
       const card = spawnCard(10, 5, {
-        rarity: rarity.uncommon,
+        rarity: types.uncommon,
         text: 'Do damage'
       });
 
-      assert.equal(card.rarity, rarity.uncommon);
+      assert.equal(card.rarity, types.uncommon);
     });
 
     it('should set text', () => {
       const card = spawnCard(10, 5, {
-        rarity: rarity.uncommon,
+        rarity: types.uncommon,
         text: 'Do damage'
       });
 
@@ -46,7 +46,7 @@ describe('entities/card', () => {
       const card = spawnCard(
         10,
         5,
-        { rarity: rarity.uncommon, text: 'Do damage' },
+        { rarity: types.uncommon, text: 'Do damage' },
         spy
       );
       card.onUp();

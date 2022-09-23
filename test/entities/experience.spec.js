@@ -74,25 +74,27 @@ describe('entities/experience', () => {
   });
 
   describe('removeDeadExperience', () => {
-    experiences.push(
-      {
-        isAlive() {
-          return false;
+    it('should remove dead entities', () => {
+      experiences.push(
+        {
+          isAlive() {
+            return false;
+          }
+        },
+        {
+          isAlive() {
+            return true;
+          }
+        },
+        {
+          isAlive() {
+            return false;
+          }
         }
-      },
-      {
-        isAlive() {
-          return true;
-        }
-      },
-      {
-        isAlive() {
-          return false;
-        }
-      }
-    );
-    removeDeadExperience();
+      );
+      removeDeadExperience();
 
-    assert.lengthOf(experiences, 1);
+      assert.lengthOf(experiences, 1);
+    });
   });
 });

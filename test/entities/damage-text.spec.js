@@ -41,25 +41,27 @@ describe('entities/damage-text', () => {
   });
 
   describe('removeDeadDamageTexts', () => {
-    damageTexts.push(
-      {
-        isAlive() {
-          return false;
+    it('should remove dead entities', () => {
+      damageTexts.push(
+        {
+          isAlive() {
+            return false;
+          }
+        },
+        {
+          isAlive() {
+            return true;
+          }
+        },
+        {
+          isAlive() {
+            return false;
+          }
         }
-      },
-      {
-        isAlive() {
-          return true;
-        }
-      },
-      {
-        isAlive() {
-          return false;
-        }
-      }
-    );
-    removeDeadDamageTexts();
+      );
+      removeDeadDamageTexts();
 
-    assert.lengthOf(damageTexts, 1);
+      assert.lengthOf(damageTexts, 1);
+    });
   });
 });

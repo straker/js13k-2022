@@ -1,5 +1,5 @@
 // ensure canvas exists before each test
-beforeEach(async () => {
+before(async () => {
   let canvas = document.createElement('canvas');
   canvas.id = 'mainCanvas';
   canvas.width = canvas.height = 600;
@@ -8,7 +8,7 @@ beforeEach(async () => {
   await import('../src/init.js');
 });
 
-afterEach(() => {
+after(() => {
   document.querySelectorAll('canvas').forEach(canvas => canvas.remove());
   document.querySelectorAll('[data-kontra]').forEach(node => node.remove());
 });

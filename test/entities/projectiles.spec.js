@@ -88,25 +88,27 @@ describe('entities/projectiles', () => {
   });
 
   describe('removeDeadProjectiles', () => {
-    projectiles.push(
-      {
-        isAlive() {
-          return false;
+    it('should remove dead entities', () => {
+      projectiles.push(
+        {
+          isAlive() {
+            return false;
+          }
+        },
+        {
+          isAlive() {
+            return true;
+          }
+        },
+        {
+          isAlive() {
+            return false;
+          }
         }
-      },
-      {
-        isAlive() {
-          return true;
-        }
-      },
-      {
-        isAlive() {
-          return false;
-        }
-      }
-    );
-    removeDeadProjectiles();
+      );
+      removeDeadProjectiles();
 
-    assert.lengthOf(projectiles, 1);
+      assert.lengthOf(projectiles, 1);
+    });
   });
 });

@@ -60,9 +60,9 @@ export function spawnPlayer() {
         this.dy = dy ? speed * -Math.cos(this.facingRot) : 0;
       }
 
-      // recover shields (mimic the shield recovery of Halo games)
-      // recover shields after 10s (600 frames), full recovery
-      // in 10s
+      // recover shields (mimic the shield recovery of Halo
+      // games). recover shields after 10s (600 frames),
+      // full recovery in 10s
       // @see https://halo.fandom.com/wiki/Energy_shielding#Energy_shields_in-game
       // @see https://www.halopedia.org/Energy_shielding#Gameplay
       if (
@@ -113,7 +113,9 @@ export function spawnPlayer() {
       const curShields = Math.round(shields.current);
       const diff = damage - curShields;
 
-      // reset shield delay timer when hit
+      // reset shield delay timer when hit, but only if player
+      // has max shields. that way recovery starts immediately
+      // when player first gets shield ability
       if (shields.max) {
         this.shieldDt = 0;
       }

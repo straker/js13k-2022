@@ -35,7 +35,7 @@ function spawnEnemy(x, y, name, modifier) {
         shock: { amount: 0, duration: 0 },
         weaken: { amount: 0, duration: 0 }
       },
-      damageFromAllSources: 0,
+      increasedDamageTaken: 0,
       render() {
         const { size, color, context } = this;
 
@@ -54,7 +54,7 @@ function spawnEnemy(x, y, name, modifier) {
 
         // apply poison every 60 frames
         if (statuses.poison.amount && statuses.poison.duration % 60 == 0) {
-          const damage = Math.round(10 * statuses.poison.amount);
+          const damage = 10 * statuses.poison.amount;
           this.takeDamage(damage, 1, 'lightgreen');
         }
 
@@ -79,13 +79,14 @@ function spawnEnemy(x, y, name, modifier) {
 
         this.advance();
 
-        for (const status in statuses) {
-          if (status.duration) {
-            if (--status.duration == 0) {
+        Object.values(statuses).forEach(status => {
+          if (status.duration > 0) {
+            if (--status.duration <= 0) {
               status.amount = 0;
+              status.duration = 0;
             }
           }
-        }
+        });
       },
       /*
         types:
@@ -98,14 +99,7 @@ function spawnEnemy(x, y, name, modifier) {
           damage += damage * this.statuses.shock.amount;
         }
 
-        // TODO: this looks wrong
-        // ability: increase damage from all sources
-        // for (let i = 0; i < 4; i++) {
-        //   if (this.statuses[i][1]) {
-        //     damage += damage * this[23];
-        //     break;
-        //   }
-        // }
+        damage += damage * this.increasedDamageTaken;
         damage = Math.round(damage);
         this.hp -= damage;
         spawnDamageText(this, damage, color);
@@ -114,7 +108,7 @@ function spawnEnemy(x, y, name, modifier) {
   );
 }
 
-export function spawnEnemies(num, id, modifier) {
+export function spawnEnemies(num, name, modifier) {
   const canvas = getCanvas();
 
   for (let i = num; i--; ) {
@@ -123,7 +117,7 @@ export function spawnEnemies(num, id, modifier) {
       { x: canvas.width / 2, y: canvas.height / 2 },
       angle
     );
-    spawnEnemy(x + canvas.width / 2, y + canvas.height / 2, id, modifier);
+    spawnEnemy(x + canvas.width / 2, y + canvas.height / 2, name, modifier);
   }
 }
 
@@ -134,4 +128,9 @@ export function removeDeadEnemies() {
     }
     return enemy.isAlive();
   });
+}
+
+// expose for testing
+export function _clear() {
+  enemies = [];
 }
