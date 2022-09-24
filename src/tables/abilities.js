@@ -92,10 +92,10 @@ const abilities = [
   // 3
   {
     rarity: types.common,
-    text: 'Projectile Damage +7\nProjectile Size -1',
+    text: 'Projectile Damage +6\nProjectile Size -2',
     effect(weapon, projectile) {
       projectile.damage += 7;
-      projectile.size = Math.max(projectile.size - 1, 1);
+      projectile.size = Math.max(projectile.size - 2, 1);
     }
   },
   // 4
@@ -406,10 +406,10 @@ const abilities = [
   // 32
   {
     rarity: types.uncommon,
-    text: 'Projectile Damage +10\nAttack Speed -10%',
+    text: 'Projectile Damage +10\nAttack Speed -20%',
     effect(weapon, projectile) {
       projectile.damage += 10;
-      weapon.attackSpeed *= 1.1;
+      weapon.attackSpeed *= 1.2;
     }
   }
 ];
