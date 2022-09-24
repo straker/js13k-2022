@@ -51,9 +51,25 @@ describe('entities/enemies', () => {
 
         assert.isTrue(stub.calledWith(enemy, player));
       });
+
+      it('should clamp movement by speed', () => {
+        stub.returns({ x: 100, y: 100 });
+        enemy.update();
+
+        assert.equal(enemy.velocity.length(), enemy.speed);
+      });
     });
 
     describe('statuses', () => {
+      it('should reduce speed by chill', () => {
+        stub.returns({ x: 100, y: 100 });
+        enemy.speed = 10;
+        enemy.statuses.chill.amount = 0.5;
+        enemy.update();
+
+        assert.equal(enemy.velocity.length(), 5);
+      });
+
       it('should apply poison damage', () => {
         const hp = enemy.hp;
         enemy.statuses.poison.amount = 1;

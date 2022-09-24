@@ -2,7 +2,7 @@ import { SpriteClass, getCanvas, keyMap } from '../../src/libs/kontra.mjs';
 import { spawnPlayer, resetPlayer } from '../../src/entities/player.js';
 import { projectiles, _clear } from '../../src/entities/projectiles.js';
 import { getWeaponMock, getProjectileMock } from '../mocks.js';
-import { simulateEvent } from '../utils.js';
+import { simulateEvent } from '../testutils.js';
 
 let player;
 let canvas;

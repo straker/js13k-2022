@@ -73,7 +73,7 @@ const totalGameTime = 60 * 10; // 10 minutes (600 seconds)
 let gameTime = 0;
 let spawnDt = 99; // high so first wave happens right away
 
-const loop = GameLoop({
+export const loop = GameLoop({
   update(dt) {
     if (this.pause) return;
     clearGrid();

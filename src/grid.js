@@ -2,7 +2,8 @@ import { getCanvas } from './libs/kontra.mjs';
 
 export const gridSize = 100;
 
-const grid = [];
+// expose for testing
+export const _grid = [];
 
 function getMaxSize() {
   const canvas = getCanvas();
@@ -28,9 +29,13 @@ export function addToGrid(obj) {
   const [row, endRow, col, endCol] = getPos(obj);
 
   // only add objects that are on screen
-  for (let r = row; r >= 0 && r <= endRow && r <= maxRow; r++) {
-    for (let c = col; c >= 0 && c <= endCol && c <= maxCol; c++) {
-      grid[r][c].push(obj);
+  for (let r = row; r <= endRow && r <= maxRow; r++) {
+    if (r < 0) continue;
+
+    for (let c = col; c <= endCol && c <= maxCol; c++) {
+      if (c < 0) continue;
+
+      _grid[r][c].push(obj);
     }
   }
 }
@@ -42,9 +47,13 @@ export function getFromGrid(obj, types) {
   const [row, endRow, col, endCol] = getPos(obj);
   const objects = [];
 
-  for (let r = row; r >= 0 && r <= endRow && r <= maxRow; r++) {
-    for (let c = col; c >= 0 && c <= endCol && c <= maxCol; c++) {
-      grid[r][c].map(item => {
+  for (let r = row; r <= endRow && r <= maxRow; r++) {
+    if (r < 0) continue;
+
+    for (let c = col; c <= endCol && c <= maxCol; c++) {
+      if (c < 0) continue;
+
+      _grid[r][c].map(item => {
         if (!objects.includes(item) && types.includes(item.type)) {
           objects.push(item);
         }
@@ -59,9 +68,9 @@ export function clearGrid() {
   const [maxRow, maxCol] = getMaxSize();
 
   for (let r = 0; r <= maxRow; r++) {
-    grid[r] = [];
+    _grid[r] = [];
     for (let c = 0; c <= maxCol; c++) {
-      grid[r][c] = [];
+      _grid[r][c] = [];
     }
   }
 }
