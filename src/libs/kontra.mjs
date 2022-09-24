@@ -96,9 +96,7 @@ function on(event, callback) {
  * @param {Function} callback - The function that was passed during registration.
  */
 function off(event, callback) {
-  callbacks$2[event] = (callbacks$2[event] || []).filter(
-    fn => fn != callback
-  );
+  callbacks$2[event] = (callbacks$2[event] || []).filter(fn => fn != callback);
 }
 
 /**
@@ -468,9 +466,7 @@ function getName(url) {
 
   // remove leading slash if there is no folder in the path
   // @see https://stackoverflow.com/a/50592629/2124254
-  return name.split('/').length == 2
-    ? name.replace(leadingSlash, '')
-    : name;
+  return name.split('/').length == 2 ? name.replace(leadingSlash, '') : name;
 }
 
 /**
@@ -651,8 +647,7 @@ function loadImage(url) {
     let resolvedUrl, image, fullUrl;
 
     resolvedUrl = joinPath(imagePath, url);
-    if (imageAssets[resolvedUrl])
-      return resolve(imageAssets[resolvedUrl]);
+    if (imageAssets[resolvedUrl]) return resolve(imageAssets[resolvedUrl]);
 
     image = new Image();
 
@@ -668,8 +663,7 @@ function loadImage(url) {
 
     image.onerror = function loadImageOnError() {
       reject(
-        /* @ifdef DEBUG */ 'Unable to load image ' +
-          /* @endif */ resolvedUrl
+        /* @ifdef DEBUG */ 'Unable to load image ' + /* @endif */ resolvedUrl
       );
     };
 
@@ -732,8 +726,7 @@ function loadAudio(url) {
     }
 
     resolvedUrl = joinPath(audioPath, url);
-    if (audioAssets[resolvedUrl])
-      return resolve(audioAssets[resolvedUrl]);
+    if (audioAssets[resolvedUrl]) return resolve(audioAssets[resolvedUrl]);
 
     audioEl.addEventListener('canplay', function loadAudioOnLoad() {
       fullUrl = getUrl(resolvedUrl, window.location.href);
@@ -747,8 +740,7 @@ function loadAudio(url) {
 
     audioEl.onerror = function loadAudioOnError() {
       reject(
-        /* @ifdef DEBUG */ 'Unable to load audio ' +
-          /* @endif */ resolvedUrl
+        /* @ifdef DEBUG */ 'Unable to load audio ' + /* @endif */ resolvedUrl
       );
     };
 
@@ -780,8 +772,7 @@ function loadData(url) {
   let resolvedUrl, fullUrl;
 
   resolvedUrl = joinPath(dataPath, url);
-  if (dataAssets[resolvedUrl])
-    return Promise.resolve(dataAssets[resolvedUrl]);
+  if (dataAssets[resolvedUrl]) return Promise.resolve(dataAssets[resolvedUrl]);
 
   return fetch(resolvedUrl)
     .then(response => {
@@ -918,9 +909,7 @@ function angleToTarget(source, target) {
   // x-axis, but the canvas rotation system is based on the y-axis
   // (rotation of 0 = up). so we need to add a quarter rotation to
   // return a counter-clockwise rotation in respect to the y-axis
-  return (
-    Math.atan2(target.y - source.y, target.x - source.x) + Math.PI / 2
-  );
+  return Math.atan2(target.y - source.y, target.x - source.x) + Math.PI / 2;
 }
 
 /**
@@ -1008,8 +997,7 @@ function seedRand(str) {
 
   // then return the seed function and discard the first result
   // @see https://github.com/bryc/code/blob/master/jshash/PRNGs.md#lcg-lehmer-rng
-  let rand = () =>
-    ((2 ** 31 - 1) & (seed = Math.imul(48271, seed))) / 2 ** 31;
+  let rand = () => ((2 ** 31 - 1) & (seed = Math.imul(48271, seed))) / 2 ** 31;
   rand();
   return rand;
 }
@@ -2701,7 +2689,7 @@ class Text extends GameObject {
 
     // @ifdef TEXT_AUTONEWLINE
     if (!this._s.length && this._fw) {
-      let parts = this.text.split(/ |(\n)/).filter(item => !!item)
+      let parts = this.text.split(/ |(\n)/).filter(item => !!item);
       let start = 0;
       let i = 2;
 
@@ -2713,10 +2701,10 @@ class Text extends GameObject {
         if (str.includes('\n')) {
           let newlineParts = str.split('\n');
           for (let j = 0; j < newlineParts.length - 1; j++) {
-            this._s.push(newlineParts[j])
+            this._s.push(newlineParts[j]);
           }
-          str = newlineParts[newlineParts.length - 1]
-          start = i
+          str = newlineParts[newlineParts.length - 1];
+          start = i;
         }
 
         let width = context.measureText(str).width;
@@ -2748,8 +2736,7 @@ class Text extends GameObject {
       this._w = this._fw || context.measureText(this.text).width;
     }
 
-    this.height =
-      this._fs + (this._s.length - 1) * this._fs * this.lineHeight;
+    this.height = this._fs + (this._s.length - 1) * this._fs * this.lineHeight;
     this._uw();
   }
 
@@ -2760,8 +2747,7 @@ class Text extends GameObject {
 
     // @ifdef TEXT_RTL
     textAlign =
-      this.textAlign ||
-      (context.canvas.dir == 'rtl' ? 'right' : 'left');
+      this.textAlign || (context.canvas.dir == 'rtl' ? 'right' : 'left');
     // @endif
 
     // @ifdef TEXT_ALIGN||TEXT_RTL
@@ -2782,18 +2768,10 @@ class Text extends GameObject {
       if (this.strokeColor) {
         context.strokeStyle = this.strokeColor;
         context.lineWidth = this.strokeWidth;
-        context.strokeText(
-          str,
-          alignX,
-          this._fs * this.lineHeight * index
-        )
+        context.strokeText(str, alignX, this._fs * this.lineHeight * index);
       }
 
-      context.fillText(
-        str,
-        alignX,
-        this._fs * this.lineHeight * index
-      );
+      context.fillText(str, alignX, this._fs * this.lineHeight * index);
     });
   }
 }
@@ -2945,9 +2923,7 @@ function circleRectCollision(object, pointer) {
 function getCurrentObject(pointer) {
   // if pointer events are required on the very first frame or
   // without a game loop, use the current frame
-  let renderedObjects = pointer._lf.length
-    ? pointer._lf
-    : pointer._cf;
+  let renderedObjects = pointer._lf.length ? pointer._lf : pointer._cf;
 
   for (let i = renderedObjects.length - 1; i >= 0; i--) {
     let object = renderedObjects[i];
@@ -3001,18 +2977,15 @@ function getCanvasOffset(pointer) {
     transformScaleY;
 
   let paddingWidth =
-    (getPropValue(_s, 'padding-left') +
-      getPropValue(_s, 'padding-right')) *
+    (getPropValue(_s, 'padding-left') + getPropValue(_s, 'padding-right')) *
     transformScaleX;
   let paddingHeight =
-    (getPropValue(_s, 'padding-top') +
-      getPropValue(_s, 'padding-bottom')) *
+    (getPropValue(_s, 'padding-top') + getPropValue(_s, 'padding-bottom')) *
     transformScaleY;
 
   return {
     scaleX: (rect.width - borderWidth - paddingWidth) / canvas.width,
-    scaleY:
-      (rect.height - borderHeight - paddingHeight) / canvas.height,
+    scaleY: (rect.height - borderHeight - paddingHeight) / canvas.height,
     offsetX:
       rect.left +
       (getPropValue(_s, 'border-left-width') +
@@ -3020,8 +2993,7 @@ function getCanvasOffset(pointer) {
         transformScaleX,
     offsetY:
       rect.top +
-      (getPropValue(_s, 'border-top-width') +
-        getPropValue(_s, 'padding-top')) *
+      (getPropValue(_s, 'border-top-width') + getPropValue(_s, 'padding-top')) *
         transformScaleY
   };
 }
@@ -3113,45 +3085,41 @@ function pointerHandler(evt, eventName) {
 
   if (isTouchEvent) {
     // track new touches
-    Array.from(evt.touches).map(
-      ({ clientX, clientY, identifier }) => {
-        let touch = pointer.touches[identifier];
-        if (!touch) {
-          touch = pointer.touches[identifier] = {
-            start: {
-              x: (clientX - offsetX) / scaleX,
-              y: (clientY - offsetY) / scaleY
-            }
-          };
-          pointer.touches.length++;
-        }
-
-        touch.changed = false;
+    Array.from(evt.touches).map(({ clientX, clientY, identifier }) => {
+      let touch = pointer.touches[identifier];
+      if (!touch) {
+        touch = pointer.touches[identifier] = {
+          start: {
+            x: (clientX - offsetX) / scaleX,
+            y: (clientY - offsetY) / scaleY
+          }
+        };
+        pointer.touches.length++;
       }
-    );
+
+      touch.changed = false;
+    });
 
     // handle only changed touches
-    Array.from(evt.changedTouches).map(
-      ({ clientX, clientY, identifier }) => {
-        let touch = pointer.touches[identifier];
-        touch.changed = true;
-        touch.x = pointer.x = (clientX - offsetX) / scaleX;
-        touch.y = pointer.y = (clientY - offsetY) / scaleY;
+    Array.from(evt.changedTouches).map(({ clientX, clientY, identifier }) => {
+      let touch = pointer.touches[identifier];
+      touch.changed = true;
+      touch.x = pointer.x = (clientX - offsetX) / scaleX;
+      touch.y = pointer.y = (clientY - offsetY) / scaleY;
 
-        callCallback(pointer, eventName, evt);
-        emit('touchChanged', evt, pointer.touches);
+      callCallback(pointer, eventName, evt);
+      emit('touchChanged', evt, pointer.touches);
 
-        // remove touches
-        if (eventName == 'onUp') {
-          delete pointer.touches[identifier];
-          pointer.touches.length--;
+      // remove touches
+      if (eventName == 'onUp') {
+        delete pointer.touches[identifier];
+        pointer.touches.length--;
 
-          if (!pointer.touches.length) {
-            emit('touchEnd');
-          }
+        if (!pointer.touches.length) {
+          emit('touchEnd');
         }
       }
-    );
+    });
   } else {
     // translate the scaled size back as if the canvas was at a
     // 1:1 scale
@@ -3174,10 +3142,7 @@ function pointerHandler(evt, eventName) {
  *
  * @returns {{x: Number, y: Number, radius: Number, canvas: HTMLCanvasElement, touches: Object}} The pointer object for the canvas.
  */
-function initPointer({
-  radius = 5,
-  canvas = getCanvas()
-} = {}) {
+function initPointer({ radius = 5, canvas = getCanvas() } = {}) {
   let pointer = pointers.get(canvas);
   if (!pointer) {
     let style = window.getComputedStyle(canvas);
@@ -4075,12 +4040,11 @@ function updateGamepad() {
       // if the button was not pressed before and is now pressed
       // that's a gamepaddown event
       if (!state && pressed) {
-        [
-          gamepaddownCallbacks[gamepad.index],
-          gamepaddownCallbacks
-        ].map(callback => {
-          callback?.[buttonName]?.(gamepad, button);
-        });
+        [gamepaddownCallbacks[gamepad.index], gamepaddownCallbacks].map(
+          callback => {
+            callback?.[buttonName]?.(gamepad, button);
+          }
+        );
       }
       // if the button was pressed before and is now not pressed
       // that's a gamepadup event
@@ -4108,14 +4072,8 @@ function updateGamepad() {
  * @function initGamepad
  */
 function initGamepad() {
-  window.addEventListener(
-    'gamepadconnected',
-    gamepadConnectedHandler
-  );
-  window.addEventListener(
-    'gamepaddisconnected',
-    gamepadDisconnectedHandler
-  );
+  window.addEventListener('gamepadconnected', gamepadConnectedHandler);
+  window.addEventListener('gamepaddisconnected', gamepadDisconnectedHandler);
   window.addEventListener('blur', blurEventHandler$1);
 
   // update gamepad state each frame
@@ -4161,9 +4119,7 @@ function onGamepad(
   { gamepad, handler = 'gamepaddown' } = {}
 ) {
   let callbacks =
-    handler == 'gamepaddown'
-      ? gamepaddownCallbacks
-      : gamepadupCallbacks;
+    handler == 'gamepaddown' ? gamepaddownCallbacks : gamepadupCallbacks;
 
   // smaller than doing `Array.isArray(buttons) ? buttons : [buttons]`
   [].concat(buttons).map(button => {
@@ -4198,14 +4154,9 @@ function onGamepad(
  * @param {Number} [options.gamepad] - Gamepad index. Defaults to unregistering from all gamepads.
  * @param {'gamepaddown'|'gamepadup'} [options.handler='gamepaddown'] - Whether to unregister from gamepaddown or gamepadup event.
  */
-function offGamepad(
-  buttons,
-  { gamepad, handler = 'gamepaddown' } = {}
-) {
+function offGamepad(buttons, { gamepad, handler = 'gamepaddown' } = {}) {
   let callbacks =
-    handler == 'gamepaddown'
-      ? gamepaddownCallbacks
-      : gamepadupCallbacks;
+    handler == 'gamepaddown' ? gamepaddownCallbacks : gamepadupCallbacks;
 
   // smaller than doing `Array.isArray(buttons) ? buttons : [buttons]`
   [].concat(buttons).map(button => {
@@ -4397,23 +4348,14 @@ let gestureMap = {
       let absY = Math.abs(y);
       if (absX < this.threshold && absY < this.threshold) return;
 
-      return absX > absY
-        ? x < 0
-          ? 'left'
-          : 'right'
-        : y < 0
-        ? 'up'
-        : 'down';
+      return absX > absY ? (x < 0 ? 'left' : 'right') : y < 0 ? 'up' : 'down';
     }
   },
   pinch: {
     touches: 2,
     threshold: 2,
     touchstart({ 0: touch0, 1: touch1 }) {
-      this.prevDist = Math.hypot(
-        touch0.x - touch1.x,
-        touch0.y - touch1.y
-      );
+      this.prevDist = Math.hypot(touch0.x - touch1.x, touch0.y - touch1.y);
     },
     touchmove({ 0: touch0, 1: touch1 }) {
       let dist = Math.hypot(touch0.x - touch1.x, touch0.y - touch1.y);
@@ -4451,9 +4393,7 @@ function initGesture() {
           // which means there were two other touches that started
           // a gesture
           // @see https://stackoverflow.com/a/33352604/2124254
-          [...Array(touches.length).keys()].every(
-            key => touches[key]
-          ) &&
+          [...Array(touches.length).keys()].every(key => touches[key]) &&
           (type = gesture[evt.type]?.(touches) ?? '') &&
           callbacks[name + type]
         ) {
@@ -4759,10 +4699,7 @@ class Grid extends GameObject {
       let colSpan = spans;
 
       do {
-        colWidths[col] = Math.max(
-          colWidths[col] || 0,
-          width / colSpan
-        );
+        colWidths[col] = Math.max(colWidths[col] || 0, width / colSpan);
         grid[row][col] = child;
       } while (col++ <= numCols && --spans);
 
@@ -4831,8 +4768,7 @@ class Grid extends GameObject {
           if (colSpan > 1 && col + colSpan <= this._nc) {
             for (let i = 1; i < colSpan; i++) {
               colWidth +=
-                colWidths[col + i] +
-                colGap[(col + i) % colGap.length];
+                colWidths[col + i] + colGap[(col + i) % colGap.length];
             }
           }
 
@@ -4997,9 +4933,7 @@ function initKeys() {
   for (i = 0; i < 26; i++) {
     // rollupjs considers this a side-effect (for now), so we'll do it
     // in the initKeys function
-    keyMap['Key' + String.fromCharCode(i + 65)] = String.fromCharCode(
-      i + 97
-    );
+    keyMap['Key' + String.fromCharCode(i + 65)] = String.fromCharCode(i + 97);
   }
 
   // numeric keys
@@ -5042,8 +4976,7 @@ function onKey(
   callback,
   { handler = 'keydown', preventDefault = true } = {}
 ) {
-  let callbacks =
-    handler == 'keydown' ? keydownCallbacks : keyupCallbacks;
+  let callbacks = handler == 'keydown' ? keydownCallbacks : keyupCallbacks;
   // pd = preventDefault
   callback._pd = preventDefault;
   // smaller than doing `Array.isArray(keys) ? keys : [keys]`
@@ -5066,8 +4999,7 @@ function onKey(
  * @param {'keydown'|'keyup'} [options.handler=keydown] - Whether to unregister from keydown or keyup events.
  */
 function offKey(keys, { handler = 'keydown' } = {}) {
-  let callbacks =
-    handler == 'keydown' ? keydownCallbacks : keyupCallbacks;
+  let callbacks = handler == 'keydown' ? keydownCallbacks : keyupCallbacks;
   [].concat(keys).map(key => delete callbacks[key]);
 }
 
@@ -5279,11 +5211,7 @@ function registerPlugin(kontraObj, pluginObj) {
   // create interceptor list and functions
   if (!objectProto._inc) {
     objectProto._inc = {};
-    objectProto._bInc = function beforePlugins(
-      context,
-      method,
-      ...args
-    ) {
+    objectProto._bInc = function beforePlugins(context, method, ...args) {
       return this._inc[method].before.reduce((acc, fn) => {
         let newArgs = fn(context, ...acc);
         return newArgs ? newArgs : acc;
@@ -5316,10 +5244,7 @@ function registerPlugin(kontraObj, pluginObj) {
         // call before interceptors
         let alteredArgs = this._bInc(this, method, ...args);
 
-        let result = objectProto['_o' + method].call(
-          this,
-          ...alteredArgs
-        );
+        let result = objectProto['_o' + method].call(this, ...alteredArgs);
 
         // call after interceptors
         return this._aInc(this, method, result, ...args);
@@ -5359,15 +5284,9 @@ function unregisterPlugin(kontraObj, pluginObj) {
     let method = getMethod(methodName);
 
     if (methodName.startsWith('before')) {
-      removeFromArray(
-        objectProto._inc[method].before,
-        pluginObj[methodName]
-      );
+      removeFromArray(objectProto._inc[method].before, pluginObj[methodName]);
     } else if (methodName.startsWith('after')) {
-      removeFromArray(
-        objectProto._inc[method].after,
-        pluginObj[methodName]
-      );
+      removeFromArray(objectProto._inc[method].after, pluginObj[methodName]);
     }
   });
 }
@@ -5805,10 +5724,7 @@ class Quadtree {
       this._o.push(object);
 
       // split the node if there are too many objects
-      if (
-        this._o.length > this.maxObjects &&
-        this._d < this.maxDepth
-      ) {
+      if (this._o.length > this.maxObjects && this._d < this.maxDepth) {
         this._sp();
 
         // move all objects to their corresponding subnodes
@@ -6186,9 +6102,7 @@ class Scene {
 
     let objects = _o;
     if (cullObjects) {
-      objects = objects.filter(object =>
-        cullFunction(camera, object)
-      );
+      objects = objects.filter(object => cullFunction(camera, object));
     }
     if (sortFunction) {
       objects.sort(sortFunction);
@@ -6470,9 +6384,7 @@ class SpriteSheet {
 
       // @ifdef DEBUG
       if (frames == undefined) {
-        throw Error(
-          'Animation ' + name + ' must provide a frames property'
-        );
+        throw Error('Animation ' + name + ' must provide a frames property');
       }
       // @endif
 
@@ -7004,17 +6916,7 @@ class TileEngine {
     let sWidth = Math.min(_canvas.width, width);
     let sHeight = Math.min(_canvas.height, height);
 
-    context.drawImage(
-      _canvas,
-      sx,
-      sy,
-      sWidth,
-      sHeight,
-      0,
-      0,
-      sWidth,
-      sHeight
-    );
+    context.drawImage(_canvas, sx, sy, sWidth, sHeight, 0, 0, sWidth, sHeight);
 
     // @ifdef TILEENGINE_CAMERA
     // draw objects
@@ -7260,4 +7162,92 @@ let kontra = {
   VectorClass: Vector
 };
 
-export { factory$b as Animation, Animation as AnimationClass, factory$6 as Button, Button as ButtonClass, GameLoop, factory$9 as GameObject, GameObject as GameObjectClass, factory$5 as Grid, Grid as GridClass, factory$4 as Pool, Pool as PoolClass, factory$3 as Quadtree, Quadtree as QuadtreeClass, factory$2 as Scene, Scene as SceneClass, factory$8 as Sprite, Sprite as SpriteClass, factory$1 as SpriteSheet, SpriteSheet as SpriteSheetClass, factory$7 as Text, Text as TextClass, factory as TileEngine, TileEngine as TileEngineClass, factory$a as Vector, Vector as VectorClass, angleToTarget, audioAssets, clamp, collides, dataAssets, kontra as default, degToRad, depthSort, emit, extendObject, gamepadAxis, gamepadMap, gamepadPressed, gestureMap, getCanvas, getContext, getPointer, getStoreItem, getWorldRect, imageAssets, init$1 as init, initGamepad, initGesture, initInput, initKeys, initPointer, inverseLerp, keyMap, keyPressed, lerp, load, loadAudio, loadData, loadImage, movePoint, off, offGamepad, offGesture, offInput, offKey, offPointer, on, onGamepad, onGesture, onInput, onKey, onPointer, pointerOver, pointerPressed, radToDeg, randInt, registerPlugin, rotatePoint, seedRand, setAudioPath, setDataPath, setImagePath, setStoreItem, track, unregisterPlugin, untrack, updateGamepad };
+export {
+  factory$b as Animation,
+  Animation as AnimationClass,
+  factory$6 as Button,
+  Button as ButtonClass,
+  GameLoop,
+  factory$9 as GameObject,
+  GameObject as GameObjectClass,
+  factory$5 as Grid,
+  Grid as GridClass,
+  factory$4 as Pool,
+  Pool as PoolClass,
+  factory$3 as Quadtree,
+  Quadtree as QuadtreeClass,
+  factory$2 as Scene,
+  Scene as SceneClass,
+  factory$8 as Sprite,
+  Sprite as SpriteClass,
+  factory$1 as SpriteSheet,
+  SpriteSheet as SpriteSheetClass,
+  factory$7 as Text,
+  Text as TextClass,
+  factory as TileEngine,
+  TileEngine as TileEngineClass,
+  factory$a as Vector,
+  Vector as VectorClass,
+  angleToTarget,
+  audioAssets,
+  clamp,
+  collides,
+  dataAssets,
+  kontra as default,
+  degToRad,
+  depthSort,
+  emit,
+  extendObject,
+  gamepadAxis,
+  gamepadMap,
+  gamepadPressed,
+  gestureMap,
+  getCanvas,
+  getContext,
+  getPointer,
+  getStoreItem,
+  getWorldRect,
+  imageAssets,
+  init$1 as init,
+  initGamepad,
+  initGesture,
+  initInput,
+  initKeys,
+  initPointer,
+  inverseLerp,
+  keyMap,
+  keyPressed,
+  lerp,
+  load,
+  loadAudio,
+  loadData,
+  loadImage,
+  movePoint,
+  off,
+  offGamepad,
+  offGesture,
+  offInput,
+  offKey,
+  offPointer,
+  on,
+  onGamepad,
+  onGesture,
+  onInput,
+  onKey,
+  onPointer,
+  pointerOver,
+  pointerPressed,
+  radToDeg,
+  randInt,
+  registerPlugin,
+  rotatePoint,
+  seedRand,
+  setAudioPath,
+  setDataPath,
+  setImagePath,
+  setStoreItem,
+  track,
+  unregisterPlugin,
+  untrack,
+  updateGamepad
+};

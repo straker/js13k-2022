@@ -8,30 +8,29 @@ module.exports = {
     sourceType: 'module'
   },
   extends: 'eslint:recommended',
-  globals: {
-    PI: 'readonly',
-    sin: 'readonly',
-    cos: 'readonly',
-    atan2: 'readonly',
-    max: 'readonly',
-    min: 'readonly',
-    random: 'readonly',
-    round: 'readonly',
-    abs: 'readonly',
-    canvas: 'readonly',
-    context: 'readonly'
-  },
   rules: {
     'no-debugger': 0,
     'no-inner-declarations': 0
   },
   overrides: [
     {
-      files: ['build.js'],
+      files: ['build.js', 'karma.conf.js'],
       env: {
         node: true,
         es2021: true
       }
+    },
+    {
+      files: ['test/**/*.js'],
+      env: {
+        browser: true,
+        es2021: true,
+        mocha: true
+      },
+      globals: {
+        assert: true,
+        sinon: true
+      }
     }
   ]
-}
+};

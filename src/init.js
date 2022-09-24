@@ -1,5 +1,5 @@
-import { init, initKeys, initPointer } from './libs/kontra.mjs'
+import { init, initKeys, initPointer } from './libs/kontra.mjs';
 
-init()
-initKeys()
-initPointer()
+init();
+initKeys();
+initPointer();

@@ -1,7 +1,7 @@
-import { Text } from '../libs/kontra.mjs'
-import { removeDead } from '../utils.js'
+import { Text } from '../libs/kontra.mjs';
+import { removeDead } from '../utils.js';
 
-export let damageTexts = []
+export let damageTexts = [];
 
 export function spawnDamageText(entity, damage, color = 'yellow') {
   damageTexts.push(
@@ -16,19 +16,24 @@ export function spawnDamageText(entity, damage, color = 'yellow') {
       anchor: { x: 0.5, y: 0.5 },
       dt: 0,
       update() {
-        this.y -= 2
+        this.y -= 2;
 
         if (++this.dt > 30) {
-          this.opacity -= 0.05
+          this.opacity -= 0.05;
           if (this.opacity <= 0) {
-            this.ttl = 0
+            this.ttl = 0;
           }
         }
       }
     })
-  )
+  );
 }
 
 export function removeDeadDamageTexts() {
-  damageTexts = removeDead(damageTexts)
+  damageTexts = removeDead(damageTexts);
+}
+
+// expose for testing
+export function _clear() {
+  damageTexts = [];
 }
